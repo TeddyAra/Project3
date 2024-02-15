@@ -5,6 +5,7 @@ using Unity.Collections;
 public class BaseClient : MonoBehaviour {
     public NetworkDriver driver; // Driver to speak with connections
     protected NetworkConnection connection; // Connected device (Server)
+    [SerializeField] private string ipAddress = "127.0.0.1";
     [SerializeField] private ushort port = 8000;
 
 #if UNITY_EDITOR
@@ -19,8 +20,7 @@ public class BaseClient : MonoBehaviour {
         driver = NetworkDriver.Create();
         connection = default(NetworkConnection);
 
-        NetworkEndpoint endpoint = NetworkEndpoint.LoopbackIpv4;
-        endpoint.Port = port;
+        NetworkEndpoint endpoint = NetworkEndpoint.Parse(ipAddress, port);
         connection = driver.Connect(endpoint);
     }
 
