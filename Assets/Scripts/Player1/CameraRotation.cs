@@ -3,13 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraRotation : MonoBehaviour {
-    [Range(180f, 269f)]
-    [SerializeField] private float minAngle = 210;
-    [Range(270, 359f)]
-    [SerializeField] private float maxAngle = 330;
-
     private bool gyroEnabled;
-    Transform parent;
 
     private void Start() {
         // Keeps screen from turning off
@@ -17,9 +11,6 @@ public class CameraRotation : MonoBehaviour {
 
         // Enables gyro controls, if possible
         gyroEnabled = EnableGyro();
-
-        // Gets parent
-        parent = transform.parent;
     }
 
     private bool EnableGyro() {
@@ -40,21 +31,32 @@ public class CameraRotation : MonoBehaviour {
         // Get phone rotation 
         Quaternion phoneQuat = Input.gyro.attitude * new Quaternion(0, 0, 1, 0);
 
-        // Turn phone rotation into x angle for camera
-        float xAngle = Mathf.Clamp(phoneQuat.eulerAngles.y, minAngle, maxAngle);
-        Vector3 camEuler = new Vector3(xAngle, 0, 0);
+        // Apply the initial rotation
+        transform.localRotation = phoneQuat;
 
-        // Apply phone rotation to camera
-        transform.localEulerAngles = camEuler;
+        // Get the global rotation of the camera and clamps the angle
+        Vector3 camEuler = transform.rotation.eulerAngles;
 
-        parent.Rotate(Vector3.back, -Input.gyro.rotationRateUnbiased.y);
+        // Clamp the rotation
+        if (Mathf.Abs(camEuler.z - 180) < 45) {
+            // Calculate the difference between the angle and the up and down angles
+            float angle1 = Mathf.Abs(camEuler.x - 90);
+            float angle2 = Mathf.Abs(camEuler.x - 270);
 
-        // Get phone accelerometer
-        Vector3 phoneAcc = Input.gyro.rotationRateUnbiased;
-        for (int i = 0; i < 3; i++) {
-            if (phoneAcc[i] > 1 || phoneAcc[i] < -1) {
-                Debug.Log(i + ": " + phoneAcc[i]);
+            // Depending on which angle it's closer to, set the angle
+            if (angle1 < angle2) {
+                camEuler.x = 90;
+            } else {
+                camEuler.x = 270;
             }
+
+            // Set the z rotation to keep camera from tilting
+            camEuler.z = 180;
+        } else {
+            camEuler.z = 0;
         }
+
+        // Applies the final rotation
+        transform.rotation = Quaternion.Euler(camEuler);
     }
 }
