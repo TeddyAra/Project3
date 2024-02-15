@@ -44,8 +44,6 @@ public class CameraRotation : MonoBehaviour {
         if (camEuler.x > 180 && camEuler.x < 360 - highAngle) camEuler.x = 360 - highAngle;
         if (camEuler.x > lowAngle && camEuler.x < 180) camEuler.x = lowAngle;
 
-        Debug.Log(camEuler.x);
-
         // Applies the final rotation
         transform.rotation = Quaternion.Euler(camEuler);
     }
