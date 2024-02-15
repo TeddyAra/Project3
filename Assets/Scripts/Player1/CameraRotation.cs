@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraRotation : MonoBehaviour {
+    [SerializeField] private float lowAngle = 70f;
+    [SerializeField] private float highAngle = 10f;
     private bool gyroEnabled;
 
     private void Start() {
@@ -37,24 +39,12 @@ public class CameraRotation : MonoBehaviour {
         // Get the global rotation of the camera and clamps the angle
         Vector3 camEuler = transform.rotation.eulerAngles;
 
-        // Clamp the rotation
-        if (Mathf.Abs(camEuler.z - 180) < 45) {
-            // Calculate the difference between the angle and the up and down angles
-            float angle1 = Mathf.Abs(camEuler.x - 90);
-            float angle2 = Mathf.Abs(camEuler.x - 270);
+        // Clamp the rotation (Normal Mathf.Clamp results in snappy movement)
+        camEuler.z = 0;
+        if (camEuler.x > 180 && camEuler.x < 360 - highAngle) camEuler.x = 360 - highAngle;
+        if (camEuler.x > lowAngle && camEuler.x < 180) camEuler.x = lowAngle;
 
-            // Depending on which angle it's closer to, set the angle
-            if (angle1 < angle2) {
-                camEuler.x = 90;
-            } else {
-                camEuler.x = 270;
-            }
-
-            // Set the z rotation to keep camera from tilting
-            camEuler.z = 180;
-        } else {
-            camEuler.z = 0;
-        }
+        Debug.Log(camEuler.x);
 
         // Applies the final rotation
         transform.rotation = Quaternion.Euler(camEuler);
