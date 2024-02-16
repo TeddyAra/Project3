@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using TMPro;
+using System;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject cameraPrefab;
@@ -63,15 +66,10 @@ public class GameManager : MonoBehaviour {
                     break;
             }
 
-            GameObject ship = PhotonNetwork.Instantiate(shipPrefab.name, pos, rot);
-            view.RPC("InitBoatRPC", RpcTarget.All, ship, i);
+            GameObject ship = Instantiate(shipPrefab, pos, rot);
+            ship.GetComponentsInChildren<Renderer>()[1].material = materials[i];
             ships.Add(ship);
         }
-    }
-
-    [PunRPC]
-    void InitBoatRPC(GameObject ship, int i) {
-        ship.GetComponentsInChildren<Renderer>()[1].material = materials[i];
     }
 
     void Update() {
@@ -85,5 +83,5 @@ public class GameManager : MonoBehaviour {
     [PunRPC]
     void MoveBoatRPC(GameObject ship) {
         ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
-    }
+    } 
 }
