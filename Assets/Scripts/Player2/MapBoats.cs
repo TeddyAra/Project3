@@ -1,4 +1,5 @@
 using ExitGames.Client.Photon.StructWrapping;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,10 @@ public class MapBoats : MonoBehaviour {
     private RectTransform selection;
     private int selectedNum;
     private RectTransform selectedPos;
+    private PhotonView view;
 
     void Start() {
+        view = GetComponent<PhotonView>();
         boats = GameObject.FindGameObjectsWithTag("Boat");
         icons = GameObject.FindGameObjectsWithTag("Icon");
 
