@@ -8,12 +8,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Engineer.unity
     guid: 8da6e9938dcedbb46a518be7743c50c0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Player1UT.unity
     guid: 4dea91afdaf08034b99a79ecf3ca7100
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Player2UT.unity
     guid: 27f113ab76cc259459ac4af05935d10e
+  - enabled: 1
+    path: Assets/Scenes/Loading.unity
+    guid: 4c0d50ea02c91c542902cd906e7f8346
+  - enabled: 1
+    path: Assets/Scenes/Lobby.unity
+    guid: e80afb4ba83dcb4459c3292823a9ad31
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 35f318d6e3778374eb46645f0096ed43,
       type: 2}
