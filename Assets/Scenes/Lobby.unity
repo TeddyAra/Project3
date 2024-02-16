@@ -1900,6 +1900,8 @@ MonoBehaviour:
   keyboard: {fileID: 2069032789}
   cameraPrefab: {fileID: 590007173505074409, guid: 637c578a5fe0a0b4e8efeae8375630dd,
     type: 3}
+  roomCode: {fileID: 7853742923488419496, guid: 9827241b7d47ea64e965ad450c87c773,
+    type: 3}
 --- !u!4 &1085673052
 Transform:
   m_ObjectHideFlags: 0
