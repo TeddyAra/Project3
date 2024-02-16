@@ -22,12 +22,12 @@ public class GameManager : MonoBehaviour {
         switch (PhotonNetwork.PlayerList.Length) {
             case 1: 
                 Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
-                StartGame();
+                //StartGame();
                 break;
             case 2:
                 Instantiate(normalCameraPrefab);
                 Instantiate(mapPrefab);
-                //StartGame();
+                StartGame();
                 break;
         }
 
