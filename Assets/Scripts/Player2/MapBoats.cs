@@ -18,6 +18,7 @@ public class MapBoats : MonoBehaviour {
 
     void Start() {
         view = GetComponent<PhotonView>();
+
         boats = GameObject.FindGameObjectsWithTag("Boat");
         icons = GameObject.FindGameObjectsWithTag("Icon");
 
@@ -41,8 +42,13 @@ public class MapBoats : MonoBehaviour {
         selectedNum = num;
         selectedPos = icons[num + 1].GetComponent<RectTransform>();
     }
-
+    
     public void MoveBoat(bool left) {
+        view.RPC("MoveBoatRPC", RpcTarget.All, left);
+    }
+
+    [PunRPC]
+    void MoveBoatRPC(bool left) {
         boats[selectedNum].transform.Translate(Vector3.right * (left ? -moveDistance : moveDistance));
     }
 }

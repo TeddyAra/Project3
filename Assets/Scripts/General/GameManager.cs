@@ -14,11 +14,14 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private float shipSpeed;
     [SerializeField] private float cameraHeight;
     [SerializeField] private List<Material> materials = new List<Material>();
+    private PhotonView view;
 
     private bool gameStarted = false;
     private List<GameObject> ships = new List<GameObject>();
 
     void Start() {
+        view = GetComponent<PhotonView>();
+
         switch (PhotonNetwork.PlayerList.Length) {
             case 1: 
                 Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
@@ -61,16 +64,26 @@ public class GameManager : MonoBehaviour {
             }
 
             GameObject ship = PhotonNetwork.Instantiate(shipPrefab.name, pos, rot);
-            ship.GetComponentsInChildren<Renderer>()[1].material = materials[i];
+            view.RPC("InitBoatRPC", RpcTarget.All, ship, i);
             ships.Add(ship);
         }
+    }
+
+    [PunRPC]
+    void InitBoatRPC(GameObject ship, int i) {
+        ship.GetComponentsInChildren<Renderer>()[1].material = materials[i];
     }
 
     void Update() {
         if (!gameStarted) return;
 
         foreach (GameObject ship in ships) {
-            ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
+            view.RPC("MoveBoatRPC", RpcTarget.All, ship);
         }
+    }
+
+    [PunRPC]
+    void MoveBoatRPC(GameObject ship) {
+        ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
     }
 }
