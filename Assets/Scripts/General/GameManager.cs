@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject cameraPrefab;
     [SerializeField] private GameObject mapPrefab;
     [SerializeField] private TMP_Text codeText;
+    [SerializeField] private GameObject normalCameraPrefab;
     [SerializeField] private GameObject shipPrefab;
     [SerializeField] private float shipDistance;
     [SerializeField] private float shipSpeed;
@@ -24,7 +25,7 @@ public class GameManager : MonoBehaviour {
                 StartGame();
                 break;
             case 2:
-                Instantiate(new Camera());
+                Instantiate(normalCameraPrefab);
                 Instantiate(mapPrefab);
                 //StartGame();
                 break;

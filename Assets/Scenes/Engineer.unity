@@ -172,6 +172,8 @@ MonoBehaviour:
   mapPrefab: {fileID: 5583728740608975001, guid: bb6336d839616dd47b79adea8baad698,
     type: 3}
   codeText: {fileID: 1009902102}
+  normalCameraPrefab: {fileID: 6132686266361744920, guid: 75bce235a420a1044a0e0ade0ccac400,
+    type: 3}
   shipPrefab: {fileID: 2829333519788184749, guid: 0f61a381d69100248bb2ccadc004243e,
     type: 3}
   shipDistance: 20
