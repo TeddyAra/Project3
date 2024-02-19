@@ -12,13 +12,7 @@ public class BoatScript : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
         if (collision.transform.CompareTag("Rock")) {
-            view.RPC("TurnOff", RpcTarget.All);
+            gameObject.SetActive(false);
         }
-    }
-
-    [PunRPC]
-    private void TurnOff() {
-        Debug.Log("Turned off");
-        gameObject.SetActive(false);
     }
 }

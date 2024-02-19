@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private float shipDistance;
     [SerializeField] private float shipSpeed;
     [SerializeField] private float cameraHeight;
-    [SerializeField] private List<Material> materials = new List<Material>();
+    public List<Material> materials = new List<Material>();
     private PhotonView view;
 
     private bool gameStarted = false;
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour {
                     break;
             }
 
-            GameObject ship = Instantiate(shipPrefab, pos, rot);
+            GameObject ship = PhotonNetwork.Instantiate(shipPrefab.name, pos, rot);
             ship.GetComponentsInChildren<Renderer>()[1].material = materials[i];
             ships.Add(ship);
         }

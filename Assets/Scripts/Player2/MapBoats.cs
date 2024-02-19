@@ -24,6 +24,7 @@ public class MapBoats : MonoBehaviour {
 
         for (int i = 0; i < boats.Length; i++) {
             boatIcons.Add(boats[i].transform, icons[i + 1].GetComponent<RectTransform>());
+            boats[i].GetComponentsInChildren<Renderer>()[1].material = GameObject.FindAnyObjectByType<GameManager>().materials[i];
         }
 
         selection = icons[0].GetComponent<RectTransform>();
