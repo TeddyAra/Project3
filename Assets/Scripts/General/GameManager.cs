@@ -8,6 +8,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 
 public class GameManager : MonoBehaviour {
+    [SerializeField] private bool singlePlayerTest;
     [SerializeField] private GameObject cameraPrefab;
     [SerializeField] private GameObject mapPrefab;
     [SerializeField] private TMP_Text codeText;
@@ -28,12 +29,12 @@ public class GameManager : MonoBehaviour {
         switch (PhotonNetwork.PlayerList.Length) {
             case 1: 
                 Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
-                //StartGame();
+                if (singlePlayerTest) StartGame();
                 break;
             case 2:
                 Instantiate(normalCameraPrefab);
                 Instantiate(mapPrefab);
-                StartGame();
+                if (!singlePlayerTest) StartGame();
                 break;
         }
 
@@ -76,12 +77,7 @@ public class GameManager : MonoBehaviour {
         if (!gameStarted) return;
 
         foreach (GameObject ship in ships) {
-            view.RPC("MoveBoatRPC", RpcTarget.All, ship);
+            ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
         }
     }
-
-    [PunRPC]
-    void MoveBoatRPC(GameObject ship) {
-        ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
-    } 
 }

@@ -44,11 +44,6 @@ public class MapBoats : MonoBehaviour {
     }
     
     public void MoveBoat(bool left) {
-        view.RPC("MoveBoatRPC", RpcTarget.All, left);
-    }
-
-    [PunRPC]
-    void MoveBoatRPC(bool left) {
         boats[selectedNum].transform.Translate(Vector3.right * (left ? -moveDistance : moveDistance));
     }
 }
