@@ -9,6 +9,7 @@ public class BoatScript : MonoBehaviour {
     [SerializeField] private float delay;
     private bool turning;
 
+    // Only turn if not already turning
     public void MoveBoat(bool left) {
         if (!turning) StartCoroutine(Turn(left));
     }
@@ -25,21 +26,19 @@ public class BoatScript : MonoBehaviour {
         }
 
         // Wait
-        timer = 0;
-        while (timer < delay) {
+        while (timer <= turnTime + delay) {
             timer += Time.deltaTime;
             yield return null;
         }
 
         // Turn the other way
-        timer = 0;
-        while (timer <= turnTime) { 
+        while (timer <= turnTime * 2 + delay) { 
             timer += Time.deltaTime;
             transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? 1 : -1));
             yield return null;
         }
 
-        // Snap back
+        // Snap back to original rotation
         turning = false;
         transform.rotation = snapRotation;
         yield return null;

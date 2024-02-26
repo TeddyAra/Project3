@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ObstacleTest : Obstacle {
     public override void Spawn() {
-        Debug.Log("Test spawned");
+        gameObject.SetActive(true);
+        Debug.Log("Test obstacle spawned");
     }
 }

@@ -174,7 +174,8 @@ MonoBehaviour:
     spawnPoint: {fileID: 175053560}
     shipType: {fileID: 2829333519788184749, guid: 0f61a381d69100248bb2ccadc004243e,
       type: 3}
-    obstacles: []
+    obstacles:
+    - {fileID: 392773498}
   - newWave: 0
     spawnDelay: 4
     spawnPoint: {fileID: 530523988}
@@ -182,7 +183,6 @@ MonoBehaviour:
       type: 3}
     obstacles:
     - {fileID: 781880424}
-    - {fileID: 392773498}
   - newWave: 1
     spawnDelay: 2
     spawnPoint: {fileID: 175053560}
@@ -379,12 +379,12 @@ GameObject:
   - component: {fileID: 392773498}
   - component: {fileID: 392773500}
   m_Layer: 0
-  m_Name: TestObstacle (1)
+  m_Name: TestObstacle2
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &392773498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,7 +406,7 @@ Transform:
   m_GameObject: {fileID: 392773497}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.82, y: 0, z: -12.96}
+  m_LocalPosition: {x: 7.49, y: 0, z: -12.56}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -545,7 +545,7 @@ GameObject:
   m_Component:
   - component: {fileID: 530523988}
   m_Layer: 0
-  m_Name: Spawnpoint1 (1)
+  m_Name: Spawnpoint2
   m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -578,12 +578,12 @@ GameObject:
   - component: {fileID: 781880424}
   - component: {fileID: 781880426}
   m_Layer: 0
-  m_Name: TestObstacle
+  m_Name: TestObstacle1
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &781880424
 MonoBehaviour:
   m_ObjectHideFlags: 0

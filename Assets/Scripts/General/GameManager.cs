@@ -184,9 +184,9 @@ public class GameManager : MonoBehaviour {
             }
         }
 
-        // Draw the arrows
+        // Draw the obstacles
         foreach (Transform obstacle in obstaclePoints) {
-            Gizmos.DrawSphere(obstacle.position, 0.2f);
+            Gizmos.DrawSphere(obstacle.position, 1);
         }
     }
 }

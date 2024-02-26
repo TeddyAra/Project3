@@ -5,7 +5,14 @@ using UnityEngine;
 public class CameraRotation : MonoBehaviour {
     [SerializeField] private float lowAngle = 70f;
     [SerializeField] private float highAngle = 10f;
+    [SerializeField] private float zoomStrength = 0.1f;
+    [SerializeField] private float minFov = 20;
+    [SerializeField] private float maxFov = 60;
+
+    private Camera cam;
     private bool gyroEnabled;
+    private float fingerDistance;
+    private float distanceReference;
 
     private void Start() {
         // Keeps screen from turning off
@@ -13,6 +20,9 @@ public class CameraRotation : MonoBehaviour {
 
         // Enables gyro controls, if possible
         gyroEnabled = EnableGyro();
+
+        // Gets the camera
+        cam = GetComponent<Camera>();
     }
 
     private bool EnableGyro() {
@@ -30,6 +40,11 @@ public class CameraRotation : MonoBehaviour {
             return;
         }
 
+        ApplyRotation();
+        ApplyZoom();
+    }
+
+    private void ApplyRotation() {
         // Get phone rotation 
         Quaternion phoneQuat = Input.gyro.attitude * new Quaternion(0, 0, 1, 0);
 
@@ -46,5 +61,18 @@ public class CameraRotation : MonoBehaviour {
 
         // Applies the final rotation
         transform.rotation = Quaternion.Euler(camEuler);
+    }
+
+    private void ApplyZoom() {
+        if (Input.touchCount == 2) {
+            if (distanceReference == 0) {
+                distanceReference = (Input.GetTouch(0).position - Input.GetTouch(1).position).magnitude;
+            }
+            fingerDistance = (Input.GetTouch(0).position - Input.GetTouch(1).position).magnitude;
+
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView + (distanceReference - fingerDistance) * zoomStrength, minFov, maxFov);
+        } else {
+            distanceReference = 0;
+        }
     }
 }
