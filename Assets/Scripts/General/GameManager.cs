@@ -6,22 +6,40 @@ using TMPro;
 using System;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class GameManager : MonoBehaviour {
+    [Serializable]
+    public struct Wave {
+        public bool newWave;
+        public float spawnDelay;
+        public Transform spawnPoint;
+        public GameObject shipType;
+    }
+
+    [Header("Waves")]
+    [SerializeField] private List<Wave> waves;
+
+    [Header("References")]
     [SerializeField] private bool singlePlayerTest;
     [SerializeField] private GameObject cameraPrefab;
     [SerializeField] private GameObject mapPrefab;
     [SerializeField] private TMP_Text codeText;
     [SerializeField] private GameObject normalCameraPrefab;
     [SerializeField] private GameObject shipPrefab;
+    public List<Material> materials = new List<Material>();
+
+    [Header("Settings")]
     [SerializeField] private float shipDistance;
     [SerializeField] private float shipSpeed;
     [SerializeField] private float cameraHeight;
-    public List<Material> materials = new List<Material>();
-    private PhotonView view;
 
+    private PhotonView view;
     private bool gameStarted = false;
-    private List<GameObject> ships = new List<GameObject>();
+    [HideInInspector] public List<GameObject> ships = new List<GameObject>();
+    private float spawnTimer;
+    private int currentIndex = 0;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -45,7 +63,7 @@ public class GameManager : MonoBehaviour {
         gameStarted = true;
         codeText.text = "";
 
-        for (int i = 0; i < 4; i++) {
+        /*for (int i = 0; i < 4; i++) {
             Vector3 pos = Vector3.zero;
             Quaternion rot = Quaternion.Euler(0, i * 90, 0);
             switch (i) {
@@ -70,14 +88,39 @@ public class GameManager : MonoBehaviour {
             GameObject ship = PhotonNetwork.Instantiate(shipPrefab.name, pos, rot);
             ship.GetComponentsInChildren<Renderer>()[1].material = materials[i];
             ships.Add(ship);
-        }
+        }*/
     }
 
     void Update() {
         if (!gameStarted) return;
 
+        // Move all ships
         foreach (GameObject ship in ships) {
             ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
+        }
+
+        // Check if waiting for a new wave
+        if (waves[currentIndex].newWave && ships.Count > 0) return;
+        spawnTimer += Time.deltaTime;
+
+        // If a new ship should be spawned
+        if (spawnTimer > waves[currentIndex].spawnDelay) {
+            // Spawn the ship and reset the spawn timer
+            GameObject ship = PhotonNetwork.Instantiate(waves[currentIndex].shipType.name, waves[currentIndex].spawnPoint.position, waves[currentIndex].spawnPoint.rotation);
+            ships.Add(ship);
+            spawnTimer = 0;
+
+            // Let the other player know a ship has spawned
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; 
+            PhotonNetwork.RaiseEvent(1, "NewShip", raiseEventOptions, SendOptions.SendReliable);
+
+            // Check if it's the end of the game or not
+            if (currentIndex == waves.Count - 1) {
+                // Game has been won
+                Debug.Log("Won!");
+            } else {
+                currentIndex++;
+            }
         }
     }
 }
