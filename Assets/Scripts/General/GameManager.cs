@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
         public float spawnDelay;
         public Transform spawnPoint;
         public GameObject shipType;
+        public Obstacle[] obstacles;
     }
 
     [Header("Waves")]
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour {
     [HideInInspector] public List<GameObject> ships = new List<GameObject>();
     private float spawnTimer;
     private int currentIndex = 0;
+    private bool waitingForWin = false;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -99,6 +101,16 @@ public class GameManager : MonoBehaviour {
             ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
         }
 
+        // Checks if the game has been won
+        if (waitingForWin) {
+            if (ships.Count == 0) {
+                gameStarted = false;
+                waitingForWin = false;
+                Debug.Log("Players have won!");
+            }
+            return;
+        }
+
         // Check if waiting for a new wave
         if (waves[currentIndex].newWave && ships.Count > 0) return;
         spawnTimer += Time.deltaTime;
@@ -110,16 +122,21 @@ public class GameManager : MonoBehaviour {
             ships.Add(ship);
             spawnTimer = 0;
 
+            // Spawns the obstacle(s) if needed
+            if (waves[currentIndex].obstacles.Length != 0) {
+                foreach (var obstacle in waves[currentIndex].obstacles) obstacle.Spawn();
+            }
+
             // Let the other player know a ship has spawned
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; 
             PhotonNetwork.RaiseEvent(1, "NewShip", raiseEventOptions, SendOptions.SendReliable);
 
             // Check if it's the end of the game or not
-            if (currentIndex == waves.Count - 1) {
-                // Game has been won
-                Debug.Log("Won!");
-            } else {
+            if (currentIndex != waves.Count - 1) {
                 currentIndex++;
+                return;
+            } else {
+                waitingForWin = true;
             }
         }
     }
