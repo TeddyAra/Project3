@@ -8,6 +8,8 @@ TagManager:
   - Icon
   - Rock
   - Manager
+  - SpawnPoint
+  - Obstacle
   layers:
   - Default
   - TransparentFX

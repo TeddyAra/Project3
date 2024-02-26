@@ -8,6 +8,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
 using static UnityEditor.PlayerSettings;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour {
     [Serializable]
@@ -42,22 +43,30 @@ public class GameManager : MonoBehaviour {
     private float spawnTimer;
     private int currentIndex = 0;
     private bool waitingForWin = false;
+    private List<Transform> spawnPoints = new List<Transform>();
+    private List<Transform> obstaclePoints = new List<Transform>();
 
     void Start() {
         view = GetComponent<PhotonView>();
 
+        // Check which player number the player has
         switch (PhotonNetwork.PlayerList.Length) {
+            // The first player
             case 1: 
+                // Make the watch tower camera
                 Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
                 if (singlePlayerTest) StartGame();
                 break;
+            // The second player
             case 2:
+                // Make a normal camera and map ui
                 Instantiate(normalCameraPrefab);
                 Instantiate(mapPrefab);
                 if (!singlePlayerTest) StartGame();
                 break;
         }
 
+        // Display the code of the room at the top of the screen
         codeText.text = "Code: " + PhotonNetwork.CurrentRoom.Name;
     }
 
@@ -94,6 +103,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void Update() {
+        // Don't do anything if there's no game to play
         if (!gameStarted) return;
 
         // Move all ships
@@ -121,6 +131,7 @@ public class GameManager : MonoBehaviour {
             GameObject ship = PhotonNetwork.Instantiate(waves[currentIndex].shipType.name, waves[currentIndex].spawnPoint.position, waves[currentIndex].spawnPoint.rotation);
             ships.Add(ship);
             spawnTimer = 0;
+            ship.GetComponent<BoatScript>().MoveBoat(currentIndex == 0 ? true : false);
 
             // Spawns the obstacle(s) if needed
             if (waves[currentIndex].obstacles.Length != 0) {
@@ -128,7 +139,7 @@ public class GameManager : MonoBehaviour {
             }
 
             // Let the other player know a ship has spawned
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; 
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others }; 
             PhotonNetwork.RaiseEvent(1, "NewShip", raiseEventOptions, SendOptions.SendReliable);
 
             // Check if it's the end of the game or not
@@ -138,6 +149,44 @@ public class GameManager : MonoBehaviour {
             } else {
                 waitingForWin = true;
             }
+        }
+    }
+
+    // Draw the spawn points and obstacles
+    [ExecuteInEditMode]
+    private void OnDrawGizmos() {
+        // Set the colour
+        Gizmos.color = Color.red;
+
+        // Check if the list has been updated
+        GameObject[] pointsList = GameObject.FindGameObjectsWithTag("SpawnPoint");
+        if (spawnPoints.Count != pointsList.Length) {
+            spawnPoints.Clear();
+            foreach (var point in pointsList) {
+                spawnPoints.Add(point.transform);
+            }
+        }
+
+        // Draw the arrows
+        foreach (Transform spawnPoint in spawnPoints) {
+            Gizmos.DrawSphere(spawnPoint.position, 0.1f);
+            Gizmos.DrawRay(spawnPoint.position, spawnPoint.forward * 4);
+            Gizmos.DrawRay(spawnPoint.position + spawnPoint.forward * 4, -spawnPoint.forward + spawnPoint.right);
+            Gizmos.DrawRay(spawnPoint.position + spawnPoint.forward * 4, -spawnPoint.forward - spawnPoint.right);
+        }
+
+        // Check if the list has been updated
+        GameObject[] obstaclesList = GameObject.FindGameObjectsWithTag("Obstacle");
+        if (obstaclePoints.Count != obstaclesList.Length) {
+            obstaclePoints.Clear();
+            foreach (var obstacle in obstaclesList) {
+                obstaclePoints.Add(obstacle.transform);
+            }
+        }
+
+        // Draw the arrows
+        foreach (Transform obstacle in obstaclePoints) {
+            Gizmos.DrawSphere(obstacle.position, 0.2f);
         }
     }
 }

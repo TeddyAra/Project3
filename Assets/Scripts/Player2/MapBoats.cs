@@ -79,12 +79,15 @@ public class MapBoats : MonoBehaviour {
     }
 
     void Update() {
+        // Update all icon positions
         foreach (var boatIcon in boatIcons) {
             boatIcon.Value.anchoredPosition = new Vector3(boatIcon.Key.position.x * 10, boatIcon.Key.position.z * 10, 0);
         }
 
+        // If the player is touching the screen
         if (Input.touchCount > 0) { 
             for (int i = 1; i < boatIcons.Count; i++) {
+                // Check if boat icon has been touched
                 if ((Input.GetTouch(0).position - boatIcons.ElementAt(i).Value.anchoredPosition).magnitude < touchSize) {
                     Select(i - 1);
                     Debug.Log($"Icon {i - 1} selected");
@@ -92,15 +95,19 @@ public class MapBoats : MonoBehaviour {
             }
         }
 
+        // Update the position of the selection shape
         selection.anchoredPosition = selectedPos.anchoredPosition;
     }
 
+    // Select a boat
     public void Select(int num) {
         selectedNum = num;
         selectedPos = icons[num + 1].GetComponent<RectTransform>();
     }
     
+    // Move a boat
     public void MoveBoat(bool left) {
-        boats[selectedNum].transform.Translate(Vector3.right * (left ? -moveDistance : moveDistance));
+        //boats[selectedNum].transform.Translate(Vector3.right * (left ? -moveDistance : moveDistance));
+        boats[selectedNum].GetComponent<BoatScript>().MoveBoat(left);
     }
 }

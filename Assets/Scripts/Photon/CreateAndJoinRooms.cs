@@ -11,20 +11,6 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks {
     [SerializeField] private GameObject keyboard;
     [SerializeField] private GameObject cameraPrefab;
 
-    private void Update() {
-        if (Input.anyKey) {
-            for (int i = 0; i < 10; i++) {
-                if (Input.GetKeyDown(i.ToString())) {
-                    Click(i.ToString());
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.X)) {
-                Click("x");
-            }
-        }
-    }
-
     public void CreateRoom() {
         string roomName = "";
 
