@@ -55,8 +55,14 @@ public class GameManager : MonoBehaviour {
             // The first player
             case 1: 
                 // Make the watch tower camera
-                Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
-                if (singlePlayerTest) StartGame();
+                if (singlePlayerTest) {
+                    Instantiate(normalCameraPrefab);
+                    Instantiate(mapPrefab);
+                    StartGame();
+                } else {
+                    Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
+
+                }
                 break;
             // The second player
             case 2:

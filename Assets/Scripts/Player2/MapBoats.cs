@@ -43,11 +43,9 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     public void OnEvent(EventData photonEvent) {
         Debug.Log($"Event received with key {photonEvent.Code} ({GameManager.NewShip})");
         // Check if the event is for a new ship
-        if (true) {
-            Debug.Log("New ship event");
+        if (photonEvent.Code == GameManager.NewShip) {
             // Get all ships and check if they are already in the boats list
             GameObject[] newBoats = GameObject.FindGameObjectsWithTag("Boat");
-            Debug.Log(newBoats.Length);
 
             // If this is the first ship
             if (boats.Count == 0) {
