@@ -8,11 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class MapBoats : MonoBehaviour {
-    [SerializeField] private float moveDistance;
+public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private GameObject iconPrefab;
     [SerializeField] private float touchSize;
 
@@ -27,16 +27,6 @@ public class MapBoats : MonoBehaviour {
     void Start() {
         view = GetComponent<PhotonView>();
         icons = GameObject.FindGameObjectsWithTag("Icon").ToList();
-
-        /*boats = GameObject.FindGameObjectsWithTag("Boat");
-        icons = GameObject.FindGameObjectsWithTag("Icon");
-
-        for (int i = 0; i < boats.Length; i++) {
-            boatIcons.Add(boats[i].transform, icons[i + 1].GetComponent<RectTransform>());
-        }
-
-        selection = icons[0].GetComponent<RectTransform>();
-        selectedPos = icons[1].GetComponent<RectTransform>();*/
     }
 
     private void OnEnable() {
@@ -51,9 +41,9 @@ public class MapBoats : MonoBehaviour {
 
     // An event has been received
     public void OnEvent(EventData photonEvent) {
-        Debug.Log($"Event received with key {photonEvent.CustomDataKey}");
+        Debug.Log($"Event received with key {photonEvent.SenderKey} ({GameManager.NewShip})");
         // Check if the event is for a new ship
-        if (photonEvent.CustomDataKey == GameManager.NewShip) {
+        if (true) {
             Debug.Log("New ship event");
             // Get all ships and check if they are already in the boats list
             GameObject[] newBoats = GameObject.FindGameObjectsWithTag("Boat");
@@ -65,6 +55,7 @@ public class MapBoats : MonoBehaviour {
 
                 // Make a new icon for the ship
                 GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
+                newIcon.transform.SetParent(transform);
                 icons.Add(newIcon);
                 boatIcons.Add(newBoats[0].transform, newIcon.GetComponent<RectTransform>());
 
@@ -81,6 +72,7 @@ public class MapBoats : MonoBehaviour {
 
                     // Make a new icon for the ship
                     GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
+                    newIcon.transform.SetParent(transform);
                     icons.Add(newIcon);
                     boatIcons.Add(boat.transform, newIcon.GetComponent<RectTransform>());
 
@@ -120,7 +112,6 @@ public class MapBoats : MonoBehaviour {
     
     // Move a boat
     public void MoveBoat(bool left) {
-        //boats[selectedNum].transform.Translate(Vector3.right * (left ? -moveDistance : moveDistance));
         boats[selectedNum].GetComponent<BoatScript>().MoveBoat(left);
     }
 }
