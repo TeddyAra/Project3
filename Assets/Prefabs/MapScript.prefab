@@ -44,3 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaba53dad1b12bd4b8fd15f6667bf7cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveDistance: 0
+  iconPrefab: {fileID: 2878438722174883781, guid: 9e17f1be4095828439ba95cb5f5c08b6,
+    type: 3}
+  touchSize: 10
