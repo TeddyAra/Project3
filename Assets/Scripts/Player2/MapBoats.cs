@@ -47,6 +47,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
             Debug.Log("New ship event");
             // Get all ships and check if they are already in the boats list
             GameObject[] newBoats = GameObject.FindGameObjectsWithTag("Boat");
+            Debug.Log(newBoats.Length);
 
             // If this is the first ship
             if (boats.Count == 0) {

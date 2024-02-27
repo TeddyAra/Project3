@@ -46,7 +46,6 @@ public class GameManager : MonoBehaviour {
     private List<Transform> spawnPoints = new List<Transform>();
     private List<Transform> obstaclePoints = new List<Transform>();
     [HideInInspector] public const byte NewShip = 1;
-    private bool managing = false;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -57,7 +56,6 @@ public class GameManager : MonoBehaviour {
             case 1: 
                 // Make the watch tower camera
                 Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
-                managing = true;
                 if (singlePlayerTest) StartGame();
                 break;
             // The second player
@@ -76,6 +74,7 @@ public class GameManager : MonoBehaviour {
     void StartGame() {
         gameStarted = true;
         codeText.text = "";
+        Debug.Log("Game started");
 
         /*for (int i = 0; i < 4; i++) {
             Vector3 pos = Vector3.zero;
@@ -107,7 +106,7 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         // Don't do anything if there's no game to play or if not managing the game
-        if (!gameStarted || !managing) return;
+        if (!gameStarted) return;
 
         // Move all ships
         foreach (GameObject ship in ships) {
@@ -130,6 +129,7 @@ public class GameManager : MonoBehaviour {
 
         // If a new ship should be spawned
         if (spawnTimer > waves[currentIndex].spawnDelay) {
+            Debug.Log("Ship made");
             // Spawn the ship and reset the spawn timer
             GameObject ship = PhotonNetwork.Instantiate(waves[currentIndex].shipType.name, waves[currentIndex].spawnPoint.position, waves[currentIndex].spawnPoint.rotation);
             ships.Add(ship);
