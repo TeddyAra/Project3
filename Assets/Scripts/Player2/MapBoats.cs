@@ -40,6 +40,7 @@ public class MapBoats : MonoBehaviour {
 
     // An event has been received
     public void OnEvent(EventData photonEvent) {
+        Debug.Log("Event received");
         // Check if the event is for a new ship
         if ((string)photonEvent.CustomData == "NewShip") {
             // Get all ships and check if they are already in the boats list
@@ -96,7 +97,7 @@ public class MapBoats : MonoBehaviour {
         }
 
         // Update the position of the selection shape
-        selection.anchoredPosition = selectedPos.anchoredPosition;
+        if (selection != null) selection.anchoredPosition = selectedPos.anchoredPosition;
     }
 
     // Select a boat

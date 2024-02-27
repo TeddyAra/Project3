@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour {
     private bool waitingForWin = false;
     private List<Transform> spawnPoints = new List<Transform>();
     private List<Transform> obstaclePoints = new List<Transform>();
+    private const byte NewShip = 1;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -140,7 +141,7 @@ public class GameManager : MonoBehaviour {
 
             // Let the other player know a ship has spawned
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others }; 
-            PhotonNetwork.RaiseEvent(1, "NewShip", raiseEventOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent(NewShip, "NewShip", raiseEventOptions, SendOptions.SendReliable);
 
             // Check if it's the end of the game or not
             if (currentIndex != waves.Count - 1) {
