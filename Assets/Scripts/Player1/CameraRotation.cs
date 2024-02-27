@@ -12,7 +12,7 @@ public class CameraRotation : MonoBehaviour {
     private Camera cam;
     private bool gyroEnabled;
     private float fingerDistance;
-    private float distanceReference;
+    private float lastDistance;
 
     private void Start() {
         // Keeps screen from turning off
@@ -64,15 +64,13 @@ public class CameraRotation : MonoBehaviour {
     }
 
     private void ApplyZoom() {
-        if (Input.touchCount == 2) {
-            if (distanceReference == 0) {
-                distanceReference = (Input.GetTouch(0).position - Input.GetTouch(1).position).magnitude;
-            }
+        if (Input.touchCount >= 2) {
+            lastDistance = lastDistance == 0 ? (Input.GetTouch(0).position - Input.GetTouch(1).position).magnitude : fingerDistance;
             fingerDistance = (Input.GetTouch(0).position - Input.GetTouch(1).position).magnitude;
-
-            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView + (distanceReference - fingerDistance) * zoomStrength, minFov, maxFov);
+            Debug.Log(fingerDistance + " " + lastDistance);
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView + (lastDistance - fingerDistance) * zoomStrength, minFov, maxFov);
         } else {
-            distanceReference = 0;
+            lastDistance = 0;
         }
     }
 }
