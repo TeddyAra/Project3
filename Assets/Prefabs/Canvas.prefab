@@ -429,7 +429,7 @@ GameObject:
   - component: {fileID: 2486313853188551446}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: Map
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -533,10 +533,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaba53dad1b12bd4b8fd15f6667bf7cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveDistance: 1
   iconPrefab: {fileID: 2878438722174883781, guid: 9e17f1be4095828439ba95cb5f5c08b6,
     type: 3}
-  touchSize: 10
+  touchSize: 50
+  selection: {fileID: 4513801250774431360}
 --- !u!1 &8911903476823893015
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,11 +551,11 @@ GameObject:
   - component: {fileID: 3473049713462723390}
   m_Layer: 5
   m_Name: Selection
-  m_TagString: Icon
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4513801250774431360
 RectTransform:
   m_ObjectHideFlags: 0

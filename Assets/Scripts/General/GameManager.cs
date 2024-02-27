@@ -115,9 +115,9 @@ public class GameManager : MonoBehaviour {
         if (!gameStarted) return;
 
         // Move all ships
-        foreach (GameObject ship in ships) {
+        /*foreach (GameObject ship in ships) {
             ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
-        }
+        }*/
 
         // Checks if the game has been won
         if (waitingForWin) {
@@ -140,7 +140,6 @@ public class GameManager : MonoBehaviour {
             GameObject ship = PhotonNetwork.Instantiate(waves[currentIndex].shipType.name, waves[currentIndex].spawnPoint.position, waves[currentIndex].spawnPoint.rotation);
             ships.Add(ship);
             spawnTimer = 0;
-            ship.GetComponent<BoatScript>().MoveBoat(currentIndex == 0 ? true : false);
 
             // Spawns the obstacle(s) if needed
             if (waves[currentIndex].obstacles.Length != 0) {

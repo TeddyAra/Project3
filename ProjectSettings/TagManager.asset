@@ -4,12 +4,18 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Boat
   - Icon
   - Rock
   - Manager
   - SpawnPoint
   - Obstacle
+  - Port1
+  - Port2
+  - Port3
+  - Boat1
+  - Boat2
+  - Boat3
+  - Map
   layers:
   - Default
   - TransparentFX

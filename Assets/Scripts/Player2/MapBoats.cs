@@ -15,13 +15,14 @@ using UnityEngine.UI;
 public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private GameObject iconPrefab;
     [SerializeField] private float touchSize;
+    public RectTransform selection;
 
-    private Dictionary<Transform, RectTransform> boatIcons = new Dictionary<Transform, RectTransform>();
-    private List<GameObject> boats = new List<GameObject>();
-    private List<GameObject> icons = new List<GameObject>();
-    private RectTransform selection;
-    private int selectedNum;
-    private RectTransform selectedPos;
+    [HideInInspector] public Dictionary<Transform, RectTransform> boatIcons = new Dictionary<Transform, RectTransform>();
+    [HideInInspector] public List<GameObject> boats = new List<GameObject>();
+    [HideInInspector] public List<GameObject> icons = new List<GameObject>();
+    private GameObject selectedBoat;
+    private float touchDist;
+    [HideInInspector] public RectTransform selectedPos;
     private PhotonView view;
 
     void Start() {
@@ -45,7 +46,11 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         // Check if the event is for a new ship
         if (photonEvent.Code == GameManager.NewShip) {
             // Get all ships and check if they are already in the boats list
-            GameObject[] newBoats = GameObject.FindGameObjectsWithTag("Boat");
+            // Hardcoded for now, change this to be dynamic later
+            GameObject[] newBoats1 = GameObject.FindGameObjectsWithTag("Boat1");
+            GameObject[] newBoats2 = GameObject.FindGameObjectsWithTag("Boat2");
+            GameObject[] newBoats3 = GameObject.FindGameObjectsWithTag("Boat3");
+            GameObject[] newBoats = newBoats1.Concat(newBoats2).ToArray().Concat(newBoats3).ToArray();
 
             // If this is the first ship
             if (boats.Count == 0) {
@@ -59,6 +64,8 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 boatIcons.Add(newBoats[0].transform, newIcon.GetComponent<RectTransform>());
 
                 Debug.Log("First icon created");
+
+                Select(0);
                 return;
             }
 
@@ -89,28 +96,32 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         }
 
         // If the player is touching the screen
-        if (Input.touchCount > 0) { 
-            for (int i = 1; i < boatIcons.Count; i++) {
+        if (Input.touchCount > 0) {
+            touchDist = touchSize;
+            for (int i = 0; i < boatIcons.Count; i++) {
                 // Check if boat icon has been touched
-                if ((Input.GetTouch(0).position - boatIcons.ElementAt(i).Value.anchoredPosition).magnitude < touchSize) {
-                    Select(i - 1);
-                    Debug.Log($"Icon {i - 1} selected");
+                Vector2 iconPos = new Vector2(boatIcons.ElementAt(i).Value.position.x, boatIcons.ElementAt(i).Value.position.y);
+                if ((Input.GetTouch(0).position - iconPos).magnitude < touchDist) {
+                    touchDist = (Input.GetTouch(0).position - iconPos).magnitude;
+                    Select(i);
+                    Debug.Log($"Icon {i} selected");
                 }
             }
         }
 
         // Update the position of the selection shape
-        if (selection != null) selection.anchoredPosition = selectedPos.anchoredPosition;
+        if (selectedPos != null) selection.anchoredPosition = selectedPos.anchoredPosition;
     }
 
     // Select a boat
     public void Select(int num) {
-        selectedNum = num;
-        selectedPos = icons[num + 1].GetComponent<RectTransform>();
+        selection.gameObject.SetActive(true);
+        selectedBoat = boats[num];
+        selectedPos = icons[num].GetComponent<RectTransform>();
     }
     
     // Move a boat
     public void MoveBoat(bool left) {
-        boats[selectedNum].GetComponent<BoatScript>().MoveBoat(left);
+        selectedBoat.GetComponent<BoatScript>().MoveBoat(left);
     }
 }
