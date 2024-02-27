@@ -6,11 +6,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private GameObject iconPrefab;
@@ -24,10 +26,12 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     private float touchDist;
     [HideInInspector] public RectTransform selectedPos;
     private PhotonView view;
+    private TMP_Text codeText;
 
     void Start() {
         view = GetComponent<PhotonView>();
         icons = GameObject.FindGameObjectsWithTag("Icon").ToList();
+        codeText = GameObject.FindGameObjectWithTag("Text").GetComponent<TMP_Text>();
     }
 
     private void OnEnable() {
@@ -123,5 +127,19 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     // Move a boat
     public void MoveBoat(bool left) {
         selectedBoat.GetComponent<BoatScript>().MoveBoat(left);
+    }
+
+    public IEnumerator PopUp(string text, Color color, float time) {
+        float timer = 0;
+        codeText.text = text;
+        codeText.color = color;
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        codeText.text = "";
     }
 }

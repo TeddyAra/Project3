@@ -57,7 +57,10 @@ public class GameManager : MonoBehaviour {
                 // Make the watch tower camera
                 if (singlePlayerTest) {
                     Instantiate(normalCameraPrefab);
-                    Instantiate(mapPrefab);
+                    GameObject map = Instantiate(mapPrefab);
+                    GameObject parent = codeText.transform.parent.gameObject;
+                    codeText.transform.SetParent(map.transform);
+                    Destroy(parent);
                     StartGame();
                 } else {
                     Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));

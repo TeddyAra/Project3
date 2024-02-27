@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class BoatScript : MonoBehaviour {
@@ -21,6 +22,7 @@ public class BoatScript : MonoBehaviour {
 
     // Turn the boat
     IEnumerator Turn(bool left) {
+        Debug.Log("Turn");
         float timer = 0;
 
         while (timer <= turnTime) {
@@ -41,14 +43,18 @@ public class BoatScript : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
+        MapBoats boatsScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+
         // Check if it's the correct port
         Debug.Log(transform.tag[transform.tag.Length - 1] + " == " + other.transform.tag[other.tag.Length - 1]);
         if (transform.tag[transform.tag.Length - 1] == other.transform.tag[other.tag.Length - 1]) {
+            // Ship is at the right port
             Debug.Log("Ping");
-            // Ship is at right port
+            StartCoroutine(boatsScript.PopUp("Yippee", Color.green, 4));
         } else {
-            Debug.Log("Muuuuh");
             // Ship isn't at right port
+            Debug.Log("Muuuuh");
+            StartCoroutine(boatsScript.PopUp("Womp womp", Color.red, 4));
         }
 
         // Map script, keeps track of the icons
@@ -68,6 +74,5 @@ public class BoatScript : MonoBehaviour {
         // Remove the ship
         GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
         gameObject.SetActive(false);
-
     }
 }
