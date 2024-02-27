@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class MapBoats : MonoBehaviour, IOnEventCallback {
+public class MapBoats : MonoBehaviour {
     [SerializeField] private float moveDistance;
     [SerializeField] private GameObject iconPrefab;
     [SerializeField] private float touchSize;
@@ -40,18 +40,21 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     }
 
     private void OnEnable() {
-        PhotonNetwork.AddCallbackTarget(this);
+        Debug.Log("Enabled");
+        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
     }
 
     private void OnDisable() {
-        PhotonNetwork.RemoveCallbackTarget(this);
+        Debug.Log("Disabled");
+        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
     }
 
     // An event has been received
     public void OnEvent(EventData photonEvent) {
         Debug.Log("Event received");
         // Check if the event is for a new ship
-        if ((string)photonEvent.CustomData == "NewShip") {
+        if (photonEvent.CustomDataKey == GameManager.NewShip) {
+            Debug.Log("New ship event");
             // Get all ships and check if they are already in the boats list
             GameObject[] newBoats = GameObject.FindGameObjectsWithTag("Boat");
 
@@ -65,7 +68,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 icons.Add(newIcon);
                 boatIcons.Add(newBoats[0].transform, newIcon.GetComponent<RectTransform>());
 
-                Debug.Log("New icon created");
+                Debug.Log("First icon created");
                 return;
             }
 
