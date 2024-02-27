@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour {
     private List<Transform> spawnPoints = new List<Transform>();
     private List<Transform> obstaclePoints = new List<Transform>();
     [HideInInspector] public const byte NewShip = 1;
+    private bool managing = false;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -74,6 +75,7 @@ public class GameManager : MonoBehaviour {
     void StartGame() {
         gameStarted = true;
         codeText.text = "";
+        managing = true;
 
         /*for (int i = 0; i < 4; i++) {
             Vector3 pos = Vector3.zero;
@@ -105,7 +107,7 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         // Don't do anything if there's no game to play
-        if (!gameStarted) return;
+        if (!gameStarted || !managing) return;
 
         // Move all ships
         foreach (GameObject ship in ships) {

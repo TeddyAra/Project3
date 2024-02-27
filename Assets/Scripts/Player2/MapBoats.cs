@@ -51,7 +51,7 @@ public class MapBoats : MonoBehaviour {
 
     // An event has been received
     public void OnEvent(EventData photonEvent) {
-        Debug.Log("Event received");
+        Debug.Log($"Event received with key {photonEvent.CustomDataKey}");
         // Check if the event is for a new ship
         if (photonEvent.CustomDataKey == GameManager.NewShip) {
             Debug.Log("New ship event");
