@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void Update() {
-        // Don't do anything if there's no game to play
+        // Don't do anything if there's no game to play or if not managing the game
         if (!gameStarted || !managing) return;
 
         // Move all ships
@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour {
             }
 
             // Let the other player know a ship has spawned
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
             if (PhotonNetwork.RaiseEvent(NewShip, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log("Event sent");
 
             // Check if it's the end of the game or not
