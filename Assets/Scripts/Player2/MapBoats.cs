@@ -1,6 +1,7 @@
 using ExitGames.Client.Photon;
 using ExitGames.Client.Photon.StructWrapping;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class MapBoats : MonoBehaviour {
+public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private float moveDistance;
     [SerializeField] private GameObject iconPrefab;
     [SerializeField] private float touchSize;
@@ -36,6 +37,14 @@ public class MapBoats : MonoBehaviour {
 
         selection = icons[0].GetComponent<RectTransform>();
         selectedPos = icons[1].GetComponent<RectTransform>();*/
+    }
+
+    private void OnEnable() {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable() {
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     // An event has been received

@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour {
         }
 
         // Display the code of the room at the top of the screen
-        codeText.text = "Code: " + PhotonNetwork.CurrentRoom.Name;
+        if (PhotonNetwork.CurrentRoom != null) codeText.text = "Code: " + PhotonNetwork.CurrentRoom.Name;
     }
 
     void StartGame() {
@@ -140,8 +140,8 @@ public class GameManager : MonoBehaviour {
             }
 
             // Let the other player know a ship has spawned
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others }; 
-            PhotonNetwork.RaiseEvent(NewShip, "NewShip", raiseEventOptions, SendOptions.SendReliable);
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+            if (PhotonNetwork.RaiseEvent(NewShip, "NewShip", raiseEventOptions, SendOptions.SendReliable)) Debug.Log("L");
 
             // Check if it's the end of the game or not
             if (currentIndex != waves.Count - 1) {
