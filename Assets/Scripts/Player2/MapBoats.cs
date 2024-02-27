@@ -31,17 +31,17 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
     private void OnEnable() {
         Debug.Log("Enabled");
-        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
     private void OnDisable() {
         Debug.Log("Disabled");
-        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     // An event has been received
     public void OnEvent(EventData photonEvent) {
-        Debug.Log($"Event received with key {photonEvent.SenderKey} ({GameManager.NewShip})");
+        Debug.Log($"Event received with key {photonEvent.Code} ({GameManager.NewShip})");
         // Check if the event is for a new ship
         if (true) {
             Debug.Log("New ship event");

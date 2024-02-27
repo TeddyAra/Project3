@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour {
             case 1: 
                 // Make the watch tower camera
                 Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
+                managing = true;
                 if (singlePlayerTest) StartGame();
                 break;
             // The second player
@@ -75,7 +76,6 @@ public class GameManager : MonoBehaviour {
     void StartGame() {
         gameStarted = true;
         codeText.text = "";
-        managing = true;
 
         /*for (int i = 0; i < 4; i++) {
             Vector3 pos = Vector3.zero;
