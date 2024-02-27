@@ -64,7 +64,6 @@ public class GameManager : MonoBehaviour {
                     StartGame();
                 } else {
                     Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
-
                 }
                 break;
             // The second player
