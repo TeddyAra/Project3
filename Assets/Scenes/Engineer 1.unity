@@ -209,14 +209,7 @@ MonoBehaviour:
     type: 3}
   shipPrefab: {fileID: 2829333519788184749, guid: 0f61a381d69100248bb2ccadc004243e,
     type: 3}
-  materials:
-  - {fileID: 2100000, guid: 13f709ba7d6b4114bbfecdd64114472d, type: 2}
-  - {fileID: 2100000, guid: 3854356a638311a4598aa032564e7edf, type: 2}
-  - {fileID: 2100000, guid: e63a4af8510b6a4479b0e2de23c8607f, type: 2}
-  - {fileID: 2100000, guid: 519a8adff50ec6340b52e82075f0611d, type: 2}
-  shipDistance: 20
-  shipSpeed: 1
-  cameraHeight: 5
+  cameraPos: {fileID: 0}
   ships: []
 --- !u!1 &175053559
 GameObject:
@@ -242,13 +235,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 175053559}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.3107723, z: -0, w: 0.9504844}
-  m_LocalPosition: {x: 10.36, y: 0, z: -26.52}
+  m_LocalRotation: {x: -0, y: -0.6559994, z: -0, w: 0.75476146}
+  m_LocalPosition: {x: 29.97, y: 0, z: -35.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -36.212, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -81.991, z: 0}
 --- !u!1 &215862727
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,9 +254,10 @@ GameObject:
   - component: {fileID: 215862730}
   - component: {fileID: 215862729}
   - component: {fileID: 215862728}
+  - component: {fileID: 215862732}
   m_Layer: 0
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -354,6 +348,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &215862732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215862727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff22875e9bf8104c97a86a5acb41029, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &233429708
 PrefabInstance:
   m_ObjectHideFlags: 0

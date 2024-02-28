@@ -30,12 +30,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private TMP_Text codeText;
     [SerializeField] private GameObject normalCameraPrefab;
     [SerializeField] private GameObject shipPrefab;
-    public List<Material> materials = new List<Material>();
-
-    [Header("Settings")]
-    [SerializeField] private float shipDistance;
-    [SerializeField] private float shipSpeed;
-    [SerializeField] private float cameraHeight;
+    [SerializeField] private Transform cameraPos;
 
     private PhotonView view;
     private bool gameStarted = false;
@@ -50,20 +45,30 @@ public class GameManager : MonoBehaviour {
     void Start() {
         view = GetComponent<PhotonView>();
 
+        // Display the code of the room at the top of the screen
+        if (PhotonNetwork.CurrentRoom != null) codeText.text = "Code: " + PhotonNetwork.CurrentRoom.Name;
+
         // Check which player number the player has
         switch (PhotonNetwork.PlayerList.Length) {
             // The first player
             case 1: 
-                // Make the watch tower camera
+                // If testing
                 if (singlePlayerTest) {
+                    // Make a normal camera
                     Instantiate(normalCameraPrefab);
+
+                    // Change the code text's parent
                     GameObject map = Instantiate(mapPrefab);
                     GameObject parent = codeText.transform.parent.gameObject;
                     codeText.transform.SetParent(map.transform);
                     Destroy(parent);
+
+                    // Start the game
                     StartGame();
+                // If not testing
                 } else {
-                    Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
+                    // Instantiate the gyroscope camera
+                    Instantiate(cameraPrefab, cameraPos.position, Quaternion.Euler(90, -90, 0));
                 }
                 break;
             // The second player
@@ -74,9 +79,6 @@ public class GameManager : MonoBehaviour {
                 if (!singlePlayerTest) StartGame();
                 break;
         }
-
-        // Display the code of the room at the top of the screen
-        if (PhotonNetwork.CurrentRoom != null) codeText.text = "Code: " + PhotonNetwork.CurrentRoom.Name;
     }
 
     void StartGame() {

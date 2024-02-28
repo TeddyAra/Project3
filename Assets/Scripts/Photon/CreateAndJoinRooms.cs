@@ -27,7 +27,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks {
     }
 
     public override void OnJoinedRoom() {
-        PhotonNetwork.LoadLevel("Engineer");
+        PhotonNetwork.LoadLevel("Engineer 1");
     }
 
     public void OpenKeyboard() {

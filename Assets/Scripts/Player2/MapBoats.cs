@@ -12,12 +12,15 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private GameObject iconPrefab;
     [SerializeField] private float touchSize;
     public RectTransform selection;
+    [SerializeField] private RectTransform leftPad;
+    [SerializeField] private float padMoveSpeed;
 
     [HideInInspector] public Dictionary<Transform, RectTransform> boatIcons = new Dictionary<Transform, RectTransform>();
     [HideInInspector] public List<GameObject> boats = new List<GameObject>();
@@ -27,6 +30,8 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public RectTransform selectedPos;
     private PhotonView view;
     private TMP_Text codeText;
+    private int prevTouches = 0;
+    private bool leftShown = false;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -35,12 +40,12 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     }
 
     private void OnEnable() {
-        Debug.Log("Enabled");
+        Debug.Log("OnEvent() Enabled");
         PhotonNetwork.AddCallbackTarget(this);
     }
 
     private void OnDisable() {
-        Debug.Log("Disabled");
+        Debug.Log("OnEvent() Disabled");
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
@@ -64,6 +69,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 // Make a new icon for the ship
                 GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
                 newIcon.transform.SetParent(transform);
+                newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 2);
                 icons.Add(newIcon);
                 boatIcons.Add(newBoats[0].transform, newIcon.GetComponent<RectTransform>());
 
@@ -83,6 +89,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                     // Make a new icon for the ship
                     GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
                     newIcon.transform.SetParent(transform);
+                    newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 2);
                     icons.Add(newIcon);
                     boatIcons.Add(boat.transform, newIcon.GetComponent<RectTransform>());
 
@@ -100,7 +107,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         }
 
         // If the player is touching the screen
-        if (Input.touchCount > 0) {
+        if (Input.touchCount == 1 && prevTouches == Input.touchCount - 1) {
             touchDist = touchSize;
             for (int i = 0; i < boatIcons.Count; i++) {
                 // Check if boat icon has been touched
@@ -115,6 +122,9 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
         // Update the position of the selection shape
         if (selectedPos != null) selection.anchoredPosition = selectedPos.anchoredPosition;
+
+        // Keep track of the last frame's touches
+        prevTouches = Input.touchCount;
     }
 
     // Select a boat
@@ -129,17 +139,36 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         selectedBoat.GetComponent<BoatScript>().MoveBoat(left);
     }
 
+    // Shows a pop up message on screen
     public IEnumerator PopUp(string text, Color color, float time) {
         float timer = 0;
         codeText.text = text;
         codeText.color = color;
 
-        while (timer < time)
-        {
+        while (timer < time) {
             timer += Time.deltaTime;
             yield return null;
         }
 
         codeText.text = "";
+    }
+
+    // Moves the left padding containing boat information to the left or right
+    public void MovePadLeft() {
+        //StartCoroutine(MovePadLeftCor());
+        leftPad.localPosition = new Vector2(leftPad.localPosition.x + (leftPad.sizeDelta.x * (leftShown ? -1 : 1)), 0);
+        leftShown = !leftShown;
+        Debug.Log("Clicked");
+    }
+
+    IEnumerator MovePadLeftCor() {
+        float originalPos = leftPad.localPosition.x;
+
+        while (leftPad.localPosition.x > originalPos - leftPad.sizeDelta.x) {
+            leftPad.localPosition = new Vector2(0, 0);
+            yield return null;
+        }
+
+        leftShown = !leftShown;
     }
 }
