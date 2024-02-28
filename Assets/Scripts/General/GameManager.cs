@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour {
 
                     // Change the code text's parent
                     GameObject map = Instantiate(mapPrefab);
+                    Debug.Log(codeText.transform.name);
                     GameObject parent = codeText.transform.parent.gameObject;
                     codeText.transform.SetParent(map.transform);
                     Destroy(parent);
