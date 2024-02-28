@@ -162,6 +162,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lowAngle: 70
   highAngle: 10
-  zoomStrength: 0.005
-  minFov: 20
+  zoomStrength: 0.02
+  minFov: 10
   maxFov: 60
