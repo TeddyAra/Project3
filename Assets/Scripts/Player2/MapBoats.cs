@@ -21,6 +21,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     public RectTransform selection;
     [SerializeField] private RectTransform leftPad;
     [SerializeField] private float padMoveSpeed;
+    [SerializeField] private float boatTranslationAmount;
 
     [HideInInspector] public Dictionary<Transform, RectTransform> boatIcons = new Dictionary<Transform, RectTransform>();
     [HideInInspector] public List<GameObject> boats = new List<GameObject>();
@@ -103,7 +104,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     void Update() {
         // Update all icon positions
         foreach (var boatIcon in boatIcons) {
-            boatIcon.Value.anchoredPosition = new Vector3(boatIcon.Key.position.x * 10, boatIcon.Key.position.z * 10, 0);
+            boatIcon.Value.anchoredPosition = new Vector3(boatIcon.Key.position.x * boatTranslationAmount, boatIcon.Key.position.z * boatTranslationAmount, 0);
         }
 
         // If the player is touching the screen
