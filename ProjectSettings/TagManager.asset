@@ -16,6 +16,7 @@ TagManager:
   - Boat2
   - Boat3
   - Map
+  - Text
   layers:
   - Default
   - TransparentFX
