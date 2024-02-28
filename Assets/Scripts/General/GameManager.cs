@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour {
                 if (singlePlayerTest) {
                     Instantiate(normalCameraPrefab);
                     GameObject map = Instantiate(mapPrefab);
+                    Debug.Log(codeText.transform.name);
                     GameObject parent = codeText.transform.parent.gameObject;
                     codeText.transform.SetParent(map.transform);
                     Destroy(parent);
