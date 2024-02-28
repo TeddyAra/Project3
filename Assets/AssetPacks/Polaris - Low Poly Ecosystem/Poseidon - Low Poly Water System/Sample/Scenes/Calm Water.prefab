@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7015658457845311683
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3341364689322752021}
+  - component: {fileID: 5207529599518340847}
+  - component: {fileID: 6472590440937788553}
+  - component: {fileID: 1612648706949145433}
+  m_Layer: 4
+  m_Name: Calm Water
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3341364689322752021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7015658457845311683}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 54.8, y: 9, z: 12.63}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5207529599518340847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7015658457845311683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 462e8506f0cffa44b9bb1e626e1dfb7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: b8cb388ac43ff46499126e01e1dcf227, type: 2}
+  materialToRender: {fileID: 0}
+  materialBackFace: {fileID: 0}
+  meshType: 0
+  planePattern: 0
+  meshResolution: 100
+  meshNoise: 0.5
+  sourceMesh: {fileID: 0}
+  mesh: {fileID: 0}
+  tileSize: {x: 100, y: 100}
+  tileIndices:
+  - x: 0
+    z: 1
+  - x: 1
+    z: 1
+  - x: -1
+    z: 1
+  - x: -1
+    z: 0
+  - x: 0
+    z: 0
+  - x: 1
+    z: 0
+  - x: 1
+    z: -1
+  - x: 0
+    z: -1
+  - x: -1
+    z: -1
+  tilesFollowMainCamera: 0
+  areaMeshAnchors: []
+  spline:
+    anchors: []
+    segments: []
+  splineResolutionX: 10
+  splineResolutionY: 20
+  splineWidth: 5
+  meshFilterComponent: {fileID: 6472590440937788553}
+  meshRendererComponent: {fileID: 1612648706949145433}
+  bounds:
+    m_Center: {x: 50, y: 0, z: 50}
+    m_Extent: {x: 150, y: 0, z: 150}
+  shouldRenderBackFace: 0
+  meshVersion: 173
+  timeMode: 0
+  manualTimeSeconds: 0
+  useWaveMask: 0
+  waveMask: {fileID: 0}
+  waveMaskBounds:
+    serializedVersion: 2
+    x: -100
+    y: -100
+    width: 300
+    height: 300
+--- !u!33 &6472590440937788553
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7015658457845311683}
+  m_Mesh: {fileID: 0}
+--- !u!23 &1612648706949145433
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7015658457845311683}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials: []
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
