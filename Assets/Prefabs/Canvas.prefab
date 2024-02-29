@@ -1329,10 +1329,10 @@ RectTransform:
   - {fileID: 8462385140037129321}
   - {fileID: 1878580378856703580}
   - {fileID: 1681034450906944895}
-  - {fileID: 2427356557117406729}
   - {fileID: 4415913573876975194}
   - {fileID: 8446331063736422317}
   - {fileID: 8287633003818182161}
+  - {fileID: 2427356557117406729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1425,6 +1425,7 @@ MonoBehaviour:
   selectionSprite: {fileID: 21300000, guid: 6b83b5eb752720f40a2a6e34470d02fa, type: 3}
   boats: []
   icons: []
+  currentSelection: 0
 --- !u!1 &5843953434693060403
 GameObject:
   m_ObjectHideFlags: 0
