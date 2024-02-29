@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject normalCameraPrefab;
     [SerializeField] private GameObject shipPrefab;
     [SerializeField] private Transform cameraPos;
+    [SerializeField] private Pinwheel.Poseidon.PWater water;
 
     private PhotonView view;
     private bool gameStarted = false;
@@ -143,6 +144,7 @@ public class GameManager : MonoBehaviour {
             Debug.Log("Ship made");
             // Spawn the ship and reset the spawn timer
             GameObject ship = PhotonNetwork.Instantiate(waves[currentIndex].shipType.name, waves[currentIndex].spawnPoint.position, waves[currentIndex].spawnPoint.rotation);
+            ship.GetComponent<SimpleBuoyController>().water = water;
             ships.Add(ship);
             spawnTimer = 0;
 

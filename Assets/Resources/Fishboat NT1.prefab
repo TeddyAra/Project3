@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7284215780350148308}
   - component: {fileID: 3853207369747324339}
   - component: {fileID: 7899161837822746395}
+  - component: {fileID: -1932800497799068948}
   m_Layer: 0
   m_Name: Fishboat NT1
   m_TagString: Boat2
@@ -191,6 +192,20 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &-1932800497799068948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2829333519788184749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2507eafd38a7a8a4ea3c2bf3040bac20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  water: {fileID: 0}
+  applyRipple: 1
 --- !u!1001 &756154259238233888
 PrefabInstance:
   m_ObjectHideFlags: 0

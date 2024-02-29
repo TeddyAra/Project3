@@ -18,17 +18,18 @@ using static UnityEditor.Timeline.TimelinePlaybackControls;
 public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private GameObject iconPrefab;
     [SerializeField] private float touchSize;
-    public RectTransform selection;
     [SerializeField] private RectTransform leftPad;
     [SerializeField] private float padMoveSpeed;
     [SerializeField] private float boatTranslationAmount;
+    [SerializeField] private Sprite normalSprite;
+    [SerializeField] private Sprite selectionSprite;
 
     [HideInInspector] public Dictionary<Transform, RectTransform> boatIcons = new Dictionary<Transform, RectTransform>();
     [HideInInspector] public List<GameObject> boats = new List<GameObject>();
     [HideInInspector] public List<GameObject> icons = new List<GameObject>();
     private GameObject selectedBoat;
+    [HideInInspector] public int currentSelection;
     private float touchDist;
-    [HideInInspector] public RectTransform selectedPos;
     private PhotonView view;
     private TMP_Text codeText;
     private int prevTouches = 0;
@@ -110,19 +111,22 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         // If the player is touching the screen
         if (Input.touchCount == 1 && prevTouches == Input.touchCount - 1) {
             touchDist = touchSize;
+            int num = -1;
+
             for (int i = 0; i < boatIcons.Count; i++) {
                 // Check if boat icon has been touched
                 Vector2 iconPos = new Vector2(boatIcons.ElementAt(i).Value.position.x, boatIcons.ElementAt(i).Value.position.y);
                 if ((Input.GetTouch(0).position - iconPos).magnitude < touchDist) {
                     touchDist = (Input.GetTouch(0).position - iconPos).magnitude;
-                    Select(i);
-                    Debug.Log($"Icon {i} selected");
+                    num = i;
                 }
             }
-        }
 
-        // Update the position of the selection shape
-        if (selectedPos != null) selection.anchoredPosition = selectedPos.anchoredPosition;
+            if (num != -1) {
+                Select(num);
+                Debug.Log($"Icon {num} selected");
+            }
+        }
 
         // Keep track of the last frame's touches
         prevTouches = Input.touchCount;
@@ -130,9 +134,11 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
     // Select a boat
     public void Select(int num) {
-        selection.gameObject.SetActive(true);
+        Debug.Log("Num: " + num);
+        if (currentSelection != -1) icons[currentSelection].gameObject.GetComponent<UnityEngine.UI.Image>().sprite = normalSprite;
         selectedBoat = boats[num];
-        selectedPos = icons[num].GetComponent<RectTransform>();
+        icons[num].gameObject.GetComponent<UnityEngine.UI.Image>().sprite = selectionSprite;
+        currentSelection = num;
     }
     
     // Move a boat

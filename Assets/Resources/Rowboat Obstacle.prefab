@@ -11,17 +11,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4bb50fa1c0f44fe4e8c23c324249c282,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.14999771
+      value: -8.200012
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4bb50fa1c0f44fe4e8c23c324249c282,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.52000046
+      value: -0.9415252
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4bb50fa1c0f44fe4e8c23c324249c282,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.050001144
+      value: -1.2000122
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4bb50fa1c0f44fe4e8c23c324249c282,
         type: 3}
@@ -70,6 +70,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4bb50fa1c0f44fe4e8c23c324249c282,
         type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4bb50fa1c0f44fe4e8c23c324249c282,
+        type: 3}
       propertyPath: m_TagString
       value: Obstacle
       objectReference: {fileID: 0}
@@ -81,6 +86,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2440135170390761594}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4bb50fa1c0f44fe4e8c23c324249c282,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2839372180747139057}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4bb50fa1c0f44fe4e8c23c324249c282,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4558995145167117088}
   m_SourcePrefab: {fileID: 100100000, guid: 4bb50fa1c0f44fe4e8c23c324249c282, type: 3}
 --- !u!1 &8062308439490228132 stripped
 GameObject:
@@ -103,3 +116,38 @@ MonoBehaviour:
   rowDistance: 3
   rowSpeed: 1
   rotationSpeed: 10
+--- !u!114 &2839372180747139057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8062308439490228132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2507eafd38a7a8a4ea3c2bf3040bac20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  water: {fileID: 0}
+  applyRipple: 1
+--- !u!65 &4558995145167117088
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8062308439490228132}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.14, y: 2.24, z: 2.98}
+  m_Center: {x: 0, y: 0.4, z: 0}

@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -39,6 +40,17 @@ public class BoatScript : MonoBehaviour {
         if (collision.transform.CompareTag("Obstacle")) {
             gameObject.SetActive(false);
             GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
+
+            MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+            GameObject icon = mapScript.boatIcons[transform].gameObject;
+            mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
+            mapScript.boatIcons.Remove(transform);
+            mapScript.boats.Remove(gameObject);
+            mapScript.currentSelection = -1;
+            Destroy(icon);
+
+            GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -49,30 +61,21 @@ public class BoatScript : MonoBehaviour {
         Debug.Log(transform.tag[transform.tag.Length - 1] + " == " + other.transform.tag[other.tag.Length - 1]);
         if (transform.tag[transform.tag.Length - 1] == other.transform.tag[other.tag.Length - 1]) {
             // Ship is at the right port
-            Debug.Log("Ping");
             StartCoroutine(boatsScript.PopUp("Yippee", Color.green, 4));
         } else {
             // Ship isn't at right port
-            Debug.Log("Muuuuh");
             StartCoroutine(boatsScript.PopUp("Womp womp", Color.red, 4));
         }
 
-        // Map script, keeps track of the icons
         MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
-        Dictionary<Transform, RectTransform> dict = mapScript.boatIcons;
-
-        // Remove the selection if needed
-        if (mapScript.selectedPos == dict[transform]) mapScript.selection.gameObject.SetActive(false);
-
-        // Remove the icon and ship from the lists
+        GameObject icon = mapScript.boatIcons[transform].gameObject;
+        mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
+        mapScript.boatIcons.Remove(transform);
         mapScript.boats.Remove(gameObject);
-        mapScript.icons.Remove(dict[transform].gameObject);
+        mapScript.currentSelection = -1;
+        Destroy(icon);
 
-        Destroy(dict[transform].gameObject);
-        dict.Remove(transform);
-
-        // Remove the ship
         GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }
