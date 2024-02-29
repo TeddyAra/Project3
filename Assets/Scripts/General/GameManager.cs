@@ -46,6 +46,15 @@ public class GameManager : MonoBehaviour {
     void Start() {
         view = GetComponent<PhotonView>();
 
+        // Update the waves list to work with new waves
+        for (int i = 0; i < waves.Count; i++) {
+            if (waves[i].newWave && waves[i].spawnDelay <= 0) {
+                Wave newWave = waves[i];
+                newWave.spawnDelay = 1;
+                waves[i] = newWave;
+            }
+        }
+
         // Display the code of the room at the top of the screen
         if (PhotonNetwork.CurrentRoom != null) codeText.text = "Code: " + PhotonNetwork.CurrentRoom.Name;
 
