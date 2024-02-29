@@ -61,10 +61,12 @@ public class BoatScript : MonoBehaviour {
         Debug.Log(transform.tag[transform.tag.Length - 1] + " == " + other.transform.tag[other.tag.Length - 1]);
         if (transform.tag[transform.tag.Length - 1] == other.transform.tag[other.tag.Length - 1]) {
             // Ship is at the right port
-            StartCoroutine(boatsScript.PopUp("Yippee", Color.green, 4));
+            Debug.Log("Step 0");
+            boatsScript.PopUp("Yippee", Color.green, 4);
         } else {
             // Ship isn't at right port
-            StartCoroutine(boatsScript.PopUp("Womp womp", Color.red, 4));
+            Debug.Log("Step 0");
+            boatsScript.PopUp("Womp womp", Color.red, 4);
         }
 
         MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();

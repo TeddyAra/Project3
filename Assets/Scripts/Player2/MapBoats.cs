@@ -146,13 +146,20 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         selectedBoat.GetComponent<BoatScript>().MoveBoat(left);
     }
 
+    public void PopUp(string text, Color color, float time) { 
+        Debug.Log("Step 1");
+        StartCoroutine(PopUpCor(text, color, time));
+    }
+
     // Shows a pop up message on screen
-    public IEnumerator PopUp(string text, Color color, float time) {
+    public IEnumerator PopUpCor(string text, Color color, float time) {
+        Debug.Log("Step 2");
         float timer = 0;
         codeText.text = text;
         codeText.color = color;
 
         while (timer < time) {
+            Debug.Log("Waiting");
             timer += Time.deltaTime;
             yield return null;
         }
