@@ -10,19 +10,27 @@ public class BoatScript : MonoBehaviour {
     [SerializeField] private float turnTime;
     [SerializeField] private float moveSpeed;
 
+    [HideInInspector] public bool turning;
+    [HideInInspector] public bool left;
+
     // Move forward
     private void Update() {
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+
+        if (turning) {
+            transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));
+        }
     }
 
     // Only turn if not already turning
-    public void MoveBoat(bool left) {
-        StopAllCoroutines();
-        StartCoroutine(Turn(left));
-    }
+    /*public void Turn(bool left) {
+        *//*StopAllCoroutines();
+        StartCoroutine(Turn(left));*//*
+        transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));
+    }*/
 
     // Turn the boat
-    IEnumerator Turn(bool left) {
+    /*IEnumerator Turn(bool left) {
         Debug.Log("Turn");
         float timer = 0;
 
@@ -33,7 +41,7 @@ public class BoatScript : MonoBehaviour {
         }
 
         yield return null;
-    }
+    }*/
 
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
@@ -43,6 +51,7 @@ public class BoatScript : MonoBehaviour {
 
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             GameObject icon = mapScript.boatIcons[transform].gameObject;
+            mapScript.arrows.Remove(transform);
             mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
             mapScript.boatIcons.Remove(transform);
             mapScript.boats.Remove(gameObject);
@@ -71,6 +80,7 @@ public class BoatScript : MonoBehaviour {
 
         MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
         GameObject icon = mapScript.boatIcons[transform].gameObject;
+        mapScript.arrows.Remove(transform);
         mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
         mapScript.boatIcons.Remove(transform);
         mapScript.boats.Remove(gameObject);

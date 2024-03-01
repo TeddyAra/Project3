@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 1681034450906944895}
   - component: {fileID: 6319115989283382109}
   - component: {fileID: 3280864170729122614}
-  - component: {fileID: 3214685668934013046}
+  - component: {fileID: 7095422248705416212}
   m_Layer: 5
   m_Name: Right
   m_TagString: Untagged
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3214685668934013046
+--- !u!114 &7095422248705416212
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 512470883873216327}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: b64bd3d4c8be7ca4e8fb7d14cb427aa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -155,19 +155,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3280864170729122614}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2486313853188551446}
-        m_TargetAssemblyTypeName: MapBoats, Assembly-CSharp
-        m_MethodName: MoveBoat
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &702771003561609601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1022,7 +1010,7 @@ GameObject:
   - component: {fileID: 1878580378856703580}
   - component: {fileID: 5956534217201040429}
   - component: {fileID: 3951187815836923842}
-  - component: {fileID: 4149189181541415289}
+  - component: {fileID: 8829034345474413165}
   m_Layer: 5
   m_Name: Left
   m_TagString: Untagged
@@ -1087,7 +1075,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4149189181541415289
+--- !u!114 &8829034345474413165
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1096,7 +1084,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4577309875134007216}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: b64bd3d4c8be7ca4e8fb7d14cb427aa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -1130,19 +1118,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3951187815836923842}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2486313853188551446}
-        m_TargetAssemblyTypeName: MapBoats, Assembly-CSharp
-        m_MethodName: MoveBoat
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &4851946256736938452
 GameObject:
   m_ObjectHideFlags: 0
@@ -1329,10 +1305,10 @@ RectTransform:
   - {fileID: 8462385140037129321}
   - {fileID: 1878580378856703580}
   - {fileID: 1681034450906944895}
-  - {fileID: 2427356557117406729}
   - {fileID: 4415913573876975194}
   - {fileID: 8446331063736422317}
   - {fileID: 8287633003818182161}
+  - {fileID: 2427356557117406729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1423,8 +1399,11 @@ MonoBehaviour:
   boatTranslationAmount: 9.3
   normalSprite: {fileID: 21300000, guid: e6c92521ab0bce74b8ed4bb5ab964e10, type: 3}
   selectionSprite: {fileID: 21300000, guid: 6b83b5eb752720f40a2a6e34470d02fa, type: 3}
+  turnLeft: {fileID: 8829034345474413165}
+  turnRight: {fileID: 7095422248705416212}
   boats: []
   icons: []
+  currentSelection: 0
 --- !u!1 &5843953434693060403
 GameObject:
   m_ObjectHideFlags: 0
