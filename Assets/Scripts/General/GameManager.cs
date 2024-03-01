@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public const byte NewShip = 1;
     [HideInInspector] public const byte TutorialShip = 2;
     [HideInInspector] public const byte TaskDone = 3;
+    [HideInInspector] public const byte StartTutorial = 4;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -104,10 +105,12 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                 // Make a normal camera and map ui
                 Instantiate(normalCameraPrefab);
                 Instantiate(mapPrefab);
-                if (!singlePlayerTest) {
+                /*if (!singlePlayerTest) {
                     if (skipTutorial) StartGame();
                     else StartCoroutine(Tutorial());
-                }
+                }*/
+                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                if (PhotonNetwork.RaiseEvent(StartTutorial, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log("Event sent");
                 break;
         }
     }
@@ -125,9 +128,12 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         // Pause the game
         Pause();
 
+        Debug.Log("Tutorial");
+
         // Wait for player 1 to look at the ship
         bool shipFound = false;
         while (!shipFound) {
+            Debug.Log("Waiting");
             RaycastHit hit;
             if (Physics.Raycast(cam.position, cam.forward, out hit)) {
                 if (hit.transform.gameObject == ship) {
@@ -165,6 +171,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             case TaskDone:
                 Debug.Log("Task done");
                 twoDone = true;
+                break;
+            case StartTutorial:
+                if (skipTutorial) StartGame();
+                else StartCoroutine(Tutorial());
                 break;
         }
     }
