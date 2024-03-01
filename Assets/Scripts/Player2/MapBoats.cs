@@ -92,8 +92,6 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
             //arrows.Add(newBoats[0].transform, newIcon.GetComponentInChildren<RectTransform>());
             boatIcons.Add(newBoats[0].transform, newIcon.GetComponent<RectTransform>());
 
-            Debug.Log("First icon created");
-
             Select(0);
             return;
         }
@@ -113,8 +111,6 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 arrows.Add(boat.transform, newIcon.transform.GetChild(0).GetComponent<RectTransform>());
                 //arrows.Add(boat.transform, newIcon.GetComponentInChildren<RectTransform>());
                 boatIcons.Add(boat.transform, newIcon.GetComponent<RectTransform>());
-
-                Debug.Log("New icon created");
                 return;
             }
         }
@@ -157,17 +153,14 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     public void StartTurn(bool left) {
         selectedBoat.GetComponent<BoatScript>().turning = true;
         selectedBoat.GetComponent<BoatScript>().left = left;
-        Debug.Log("Turning " + (left ? "left" : "right"));
     }
 
     public void StopTurn() {
         selectedBoat.GetComponent<BoatScript>().turning = false;
-        Debug.Log("Stopped turning");
     }
 
     // Select a boat
     public void Select(int num) {
-        Debug.Log("Num: " + num);
         if (currentSelection != -1) icons[currentSelection].gameObject.GetComponent<UnityEngine.UI.Image>().sprite = normalSprite;
         selectedBoat = boats[num];
         icons[num].gameObject.GetComponent<UnityEngine.UI.Image>().sprite = selectionSprite;
@@ -175,19 +168,16 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     }
 
     public void PopUp(string text, Color color, float time) { 
-        Debug.Log("Step 1");
         StartCoroutine(PopUpCor(text, color, time));
     }
 
     // Shows a pop up message on screen
     public IEnumerator PopUpCor(string text, Color color, float time) {
-        Debug.Log("Step 2");
         float timer = 0;
         codeText.text = text;
         codeText.color = color;
 
         while (timer < time) {
-            Debug.Log("Waiting");
             timer += Time.deltaTime;
             yield return null;
         }
@@ -199,12 +189,15 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     public void MovePadLeft() {
         leftPad.localPosition = new Vector2(leftPad.localPosition.x + (leftPad.sizeDelta.x * (leftShown ? -1 : 1)), 0);
         leftShown = !leftShown;
-        Debug.Log("Clicked");
 
         if (tutorialStep == 0) {
             tutorialStep++;
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-            if (PhotonNetwork.RaiseEvent(GameManager.TaskDone, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log("Event sent");
+            SendEvent(GameManager.TaskDone);
         }
+    }
+
+    private void SendEvent(byte code) {
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+        if (PhotonNetwork.RaiseEvent(code, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
     }
 }

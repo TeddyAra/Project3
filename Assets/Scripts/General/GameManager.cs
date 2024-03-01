@@ -6,9 +6,6 @@ using TMPro;
 using System;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
-using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour, IOnEventCallback {
     [Serializable]
@@ -50,7 +47,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private List<Transform> obstaclePoints = new List<Transform>();
     private Transform cam;
 
-    private bool oneDone;
     private bool twoDone;
     private BoatScript tutorialShipScript;
 
@@ -86,7 +82,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
                     // Change the code text's parent
                     GameObject map = Instantiate(mapPrefab);
-                    Debug.Log(codeText.transform.name);
                     GameObject parent = codeText.transform.parent.gameObject;
                     codeText.transform.SetParent(map.transform);
                     Destroy(parent);
@@ -109,37 +104,38 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                     if (skipTutorial) StartGame();
                     else StartCoroutine(Tutorial());
                 }*/
-                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                if (PhotonNetwork.RaiseEvent(StartTutorial, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log("Event sent");
+                SendEvent(StartTutorial);
                 break;
         }
     }
 
+    private void SendEvent(byte code) {
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+        if (PhotonNetwork.RaiseEvent(code, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
+    }
+
     IEnumerator Tutorial() {
+        Debug.Log("Tutorial started");
+
         // Make tutorial ship
         GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
         ship.GetComponent<SimpleBuoyController>().water = water;
         tutorialShipScript = ship.GetComponent<BoatScript>();
 
         // Send event to other player
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        if (PhotonNetwork.RaiseEvent(TutorialShip, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log("Event sent");
+        SendEvent(TutorialShip);
 
         // Pause the game
         Pause();
 
-        Debug.Log("Tutorial");
-
         // Wait for player 1 to look at the ship
         bool shipFound = false;
         while (!shipFound) {
-            Debug.Log("Waiting");
             RaycastHit hit;
             if (Physics.Raycast(cam.position, cam.forward, out hit)) {
                 if (hit.transform.gameObject == ship) {
                     shipFound = true;
-                    oneDone = true;
-                    Debug.Log("Looked at ship");
+                    Debug.Log("Ship found");
                 }
             }
             yield return null;
@@ -147,7 +143,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         // Wait for both players to be done
         while (!twoDone) {
-            Debug.Log("Waiting on player 2");
             yield return null;
         }
 
@@ -156,10 +151,12 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     private void Pause() {
+        Debug.Log("Paused");
         tutorialShipScript.paused = true;
     }
 
     private void Resume() {
+        Debug.Log("Resumed");
         tutorialShipScript.paused = false;
     }
 
@@ -169,7 +166,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         // Check which event for the tutorial it is
         switch (photonEvent.Code) {
             case TaskDone:
-                Debug.Log("Task done");
                 twoDone = true;
                 break;
             case StartTutorial:
@@ -218,8 +214,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             }
 
             // Let the other player know a ship has spawned
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-            if (PhotonNetwork.RaiseEvent(NewShip, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log("Event sent");
+            SendEvent(NewShip);
 
             // Check if it's the end of the game or not
             if (currentIndex != waves.Count - 1) {

@@ -16,7 +16,6 @@ public class CustomButton : Button {
     public override void OnPointerDown(PointerEventData eventData) {
         base.OnPointerDown(eventData);
         mapBoatsScript.StartTurn(left);
-        Debug.Log(left);
     }
 
     public override void OnPointerUp(PointerEventData eventData) {
