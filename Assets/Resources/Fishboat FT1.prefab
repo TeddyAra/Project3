@@ -152,6 +152,7 @@ MonoBehaviour:
   moveSpeed: 1
   turning: 0
   left: 0
+  paused: 0
 --- !u!54 &3853207369747324339
 Rigidbody:
   m_ObjectHideFlags: 0

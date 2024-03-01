@@ -140,8 +140,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         }
 
         // Wait for both players to be done
-        while (!oneDone || !twoDone) {
-            Debug.Log("Waiting on player " + (oneDone ? "two" : "one"));
+        while (!twoDone) {
+            Debug.Log("Waiting on player 2");
             yield return null;
         }
 

@@ -37,6 +37,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     private TMP_Text codeText;
     private int prevTouches = 0;
     private bool leftShown = false;
+    private int tutorialStep = 0;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -64,6 +65,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 NewShip();
                 break;
             case GameManager.TutorialShip:
+                NewShip();
                 break;
         }
     }
@@ -171,11 +173,6 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         icons[num].gameObject.GetComponent<UnityEngine.UI.Image>().sprite = selectionSprite;
         currentSelection = num;
     }
-    
-    // Move a boat
-    public void MoveBoat(bool left) {
-        //selectedBoat.GetComponent<BoatScript>().Turn(left);
-    }
 
     public void PopUp(string text, Color color, float time) { 
         Debug.Log("Step 1");
@@ -200,20 +197,14 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
     // Moves the left padding containing boat information to the left or right
     public void MovePadLeft() {
-        //StartCoroutine(MovePadLeftCor());
         leftPad.localPosition = new Vector2(leftPad.localPosition.x + (leftPad.sizeDelta.x * (leftShown ? -1 : 1)), 0);
         leftShown = !leftShown;
         Debug.Log("Clicked");
-    }
 
-    IEnumerator MovePadLeftCor() {
-        float originalPos = leftPad.localPosition.x;
-
-        while (leftPad.localPosition.x > originalPos - leftPad.sizeDelta.x) {
-            leftPad.localPosition = new Vector2(0, 0);
-            yield return null;
+        if (tutorialStep == 0) {
+            tutorialStep++;
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+            if (PhotonNetwork.RaiseEvent(GameManager.TaskDone, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log("Event sent");
         }
-
-        leftShown = !leftShown;
     }
 }
