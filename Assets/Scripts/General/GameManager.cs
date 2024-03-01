@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using static UnityEditor.PlayerSettings;
 using Unity.VisualScripting;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour, IOnEventCallback {
     [Serializable]
     public struct Wave {
         public bool newWave;
@@ -23,8 +23,15 @@ public class GameManager : MonoBehaviour {
     [Header("Waves")]
     [SerializeField] private List<Wave> waves;
 
-    [Header("References")]
+    [Header("Testing")]
     [SerializeField] private bool singlePlayerTest;
+    [SerializeField] private bool skipTutorial;
+
+    [Header("Tutorial")]
+    [SerializeField] private GameObject tutorialShip;
+    [SerializeField] private Transform tutorialSpawn;
+
+    [Header("References")]
     [SerializeField] private GameObject cameraPrefab;
     [SerializeField] private GameObject mapPrefab;
     [SerializeField] private TMP_Text codeText;
@@ -41,7 +48,15 @@ public class GameManager : MonoBehaviour {
     private bool waitingForWin = false;
     private List<Transform> spawnPoints = new List<Transform>();
     private List<Transform> obstaclePoints = new List<Transform>();
+    private Transform cam;
+
+    private bool oneDone;
+    private bool twoDone;
+    private BoatScript tutorialShipScript;
+
     [HideInInspector] public const byte NewShip = 1;
+    [HideInInspector] public const byte TutorialShip = 2;
+    [HideInInspector] public const byte TaskDone = 3;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -65,7 +80,8 @@ public class GameManager : MonoBehaviour {
                 // If testing
                 if (singlePlayerTest) {
                     // Make a normal camera
-                    Instantiate(normalCameraPrefab);
+                    //Instantiate(normalCameraPrefab);
+                    cam = Instantiate(cameraPrefab, cameraPos.position, Quaternion.Euler(90, -90, 0)).GetComponentInChildren<Camera>().transform;
 
                     // Change the code text's parent
                     GameObject map = Instantiate(mapPrefab);
@@ -75,11 +91,12 @@ public class GameManager : MonoBehaviour {
                     Destroy(parent);
 
                     // Start the game
-                    StartGame();
+                    if (skipTutorial) StartGame();
+                    else StartCoroutine(Tutorial());
                 // If not testing
                 } else {
                     // Instantiate the gyroscope camera
-                    Instantiate(cameraPrefab, cameraPos.position, Quaternion.Euler(90, -90, 0));
+                    cam = Instantiate(cameraPrefab, cameraPos.position, Quaternion.Euler(90, -90, 0)).GetComponentInChildren<Camera>().transform;
                 }
                 break;
             // The second player
@@ -87,7 +104,67 @@ public class GameManager : MonoBehaviour {
                 // Make a normal camera and map ui
                 Instantiate(normalCameraPrefab);
                 Instantiate(mapPrefab);
-                if (!singlePlayerTest) StartGame();
+                if (!singlePlayerTest) {
+                    if (skipTutorial) StartGame();
+                    else StartCoroutine(Tutorial());
+                }
+                break;
+        }
+    }
+
+    IEnumerator Tutorial() {
+        // Make tutorial ship
+        GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
+        ship.GetComponent<SimpleBuoyController>().water = water;
+        tutorialShipScript = ship.GetComponent<BoatScript>();
+
+        // Send event to other player
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        if (PhotonNetwork.RaiseEvent(TutorialShip, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log("Event sent");
+
+        // Pause the game
+        Pause();
+
+        // Wait for player 1 to look at the ship
+        bool shipFound = false;
+        while (!shipFound) {
+            RaycastHit hit;
+            if (Physics.Raycast(cam.position, cam.forward, out hit)) {
+                if (hit.transform.gameObject == ship) {
+                    shipFound = true;
+                    oneDone = true;
+                    Debug.Log("Looked at ship");
+                }
+            }
+            yield return null;
+        }
+
+        // Wait for both players to be done
+        while (!oneDone || !twoDone) {
+            Debug.Log("Waiting on player " + (oneDone ? "two" : "one"));
+            yield return null;
+        }
+
+        // Resume the game
+        Resume();
+    }
+
+    private void Pause() {
+        tutorialShipScript.paused = true;
+    }
+
+    private void Resume() {
+        tutorialShipScript.paused = false;
+    }
+
+    public void OnEvent(EventData photonEvent) {
+        Debug.Log($"Event received with code {photonEvent.Code}");
+
+        // Check which event for the tutorial it is
+        switch (photonEvent.Code) {
+            case TaskDone:
+                Debug.Log("Task done");
+                twoDone = true;
                 break;
         }
     }
@@ -96,43 +173,11 @@ public class GameManager : MonoBehaviour {
         gameStarted = true;
         codeText.text = "";
         Debug.Log("Game started");
-
-        /*for (int i = 0; i < 4; i++) {
-            Vector3 pos = Vector3.zero;
-            Quaternion rot = Quaternion.Euler(0, i * 90, 0);
-            switch (i) {
-                case 0:
-                    pos.x -= shipDistance;
-                    pos.z -= shipDistance;
-                    break;
-                case 1:
-                    pos.x -= shipDistance;
-                    pos.z += shipDistance;
-                    break;
-                case 2:
-                    pos.x += shipDistance;
-                    pos.z += shipDistance;
-                    break;
-                case 3:
-                    pos.x += shipDistance;
-                    pos.z -= shipDistance;
-                    break;
-            }
-
-            GameObject ship = PhotonNetwork.Instantiate(shipPrefab.name, pos, rot);
-            ship.GetComponentsInChildren<Renderer>()[1].material = materials[i];
-            ships.Add(ship);
-        }*/
     }
 
     void Update() {
         // Don't do anything if there's no game to play or if not managing the game
         if (!gameStarted) return;
-
-        // Move all ships
-        /*foreach (GameObject ship in ships) {
-            ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
-        }*/
 
         // Checks if the game has been won
         if (waitingForWin) {

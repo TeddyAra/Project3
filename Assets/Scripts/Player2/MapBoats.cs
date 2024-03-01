@@ -37,8 +37,6 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     private TMP_Text codeText;
     private int prevTouches = 0;
     private bool leftShown = false;
-    private bool prevLeft;
-    private bool prevRight;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -58,55 +56,64 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
     // An event has been received
     public void OnEvent(EventData photonEvent) {
-        Debug.Log($"Event received with key {photonEvent.Code} ({GameManager.NewShip})");
-        // Check if the event is for a new ship
-        if (photonEvent.Code == GameManager.NewShip) {
-            // Get all ships and check if they are already in the boats list
-            // Hardcoded for now, change this to be dynamic later
-            GameObject[] newBoats1 = GameObject.FindGameObjectsWithTag("Boat1");
-            GameObject[] newBoats2 = GameObject.FindGameObjectsWithTag("Boat2");
-            GameObject[] newBoats3 = GameObject.FindGameObjectsWithTag("Boat3");
-            GameObject[] newBoats = newBoats1.Concat(newBoats2).ToArray().Concat(newBoats3).ToArray();
+        Debug.Log($"Event received with code {photonEvent.Code}");
 
-            // If this is the first ship
-            if (boats.Count == 0) {
+        // Check if the event is for a new ship
+        switch (photonEvent.Code) {
+            case GameManager.NewShip:
+                NewShip();
+                break;
+            case GameManager.TutorialShip:
+                break;
+        }
+    }
+
+    private void NewShip() { 
+        // Get all ships and check if they are already in the boats list
+        // Hardcoded for now, change this to be dynamic later
+        GameObject[] newBoats1 = GameObject.FindGameObjectsWithTag("Boat1");
+        GameObject[] newBoats2 = GameObject.FindGameObjectsWithTag("Boat2");
+        GameObject[] newBoats3 = GameObject.FindGameObjectsWithTag("Boat3");
+        GameObject[] newBoats = newBoats1.Concat(newBoats2).ToArray().Concat(newBoats3).ToArray();
+
+        // If this is the first ship
+        if (boats.Count == 0) {
+            // Add the boat to the boats list
+            boats.Add(newBoats[0]);
+
+            // Make a new icon for the ship
+            GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
+            newIcon.transform.SetParent(transform);
+            newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 2);
+            icons.Add(newIcon);
+            arrows.Add(newBoats[0].transform, newIcon.transform.GetChild(0).GetComponent<RectTransform>());
+            //arrows.Add(newBoats[0].transform, newIcon.GetComponentInChildren<RectTransform>());
+            boatIcons.Add(newBoats[0].transform, newIcon.GetComponent<RectTransform>());
+
+            Debug.Log("First icon created");
+
+            Select(0);
+            return;
+        }
+
+        // If this isn't the first ship
+        foreach (GameObject boat in newBoats) {
+            // If boat isn't already being tracked
+            if (!boats.Contains(boat)) {
                 // Add the boat to the boats list
-                boats.Add(newBoats[0]);
+                boats.Add(boat);
 
                 // Make a new icon for the ship
                 GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
                 newIcon.transform.SetParent(transform);
                 newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 2);
                 icons.Add(newIcon);
-                arrows.Add(newBoats[0].transform, newIcon.transform.GetChild(0).GetComponent<RectTransform>());
-                //arrows.Add(newBoats[0].transform, newIcon.GetComponentInChildren<RectTransform>());
-                boatIcons.Add(newBoats[0].transform, newIcon.GetComponent<RectTransform>());
+                arrows.Add(boat.transform, newIcon.transform.GetChild(0).GetComponent<RectTransform>());
+                //arrows.Add(boat.transform, newIcon.GetComponentInChildren<RectTransform>());
+                boatIcons.Add(boat.transform, newIcon.GetComponent<RectTransform>());
 
-                Debug.Log("First icon created");
-
-                Select(0);
+                Debug.Log("New icon created");
                 return;
-            }
-
-            // If this isn't the first ship
-            foreach (GameObject boat in newBoats) {
-                // If boat isn't already being tracked
-                if (!boats.Contains(boat)) {
-                    // Add the boat to the boats list
-                    boats.Add(boat);
-
-                    // Make a new icon for the ship
-                    GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
-                    newIcon.transform.SetParent(transform);
-                    newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 2);
-                    icons.Add(newIcon);
-                    arrows.Add(boat.transform, newIcon.transform.GetChild(0).GetComponent<RectTransform>());
-                    //arrows.Add(boat.transform, newIcon.GetComponentInChildren<RectTransform>());
-                    boatIcons.Add(boat.transform, newIcon.GetComponent<RectTransform>());
-
-                    Debug.Log("New icon created");
-                    return;
-                }
             }
         }
     }
@@ -143,21 +150,6 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
         // Keep track of the last frame's touches
         prevTouches = Input.touchCount;
-
-        /*if (turnLeft.heldDown != prevLeft) {
-            selectedBoat.GetComponent<BoatScript>().turning = turnLeft.heldDown;
-            selectedBoat.GetComponent<BoatScript>().left = true;
-            Debug.Log("Turning");
-        }
-
-        if (turnRight.heldDown != prevRight) {
-            selectedBoat.GetComponent<BoatScript>().turning = turnRight.heldDown;
-            selectedBoat.GetComponent<BoatScript>().left = false;
-            Debug.Log("Turning");
-        }
-
-        prevLeft = turnLeft.heldDown;
-        prevRight = turnRight.heldDown;*/
     }
 
     public void StartTurn(bool left) {

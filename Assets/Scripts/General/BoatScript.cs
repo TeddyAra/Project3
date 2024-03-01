@@ -12,9 +12,12 @@ public class BoatScript : MonoBehaviour {
 
     [HideInInspector] public bool turning;
     [HideInInspector] public bool left;
+    [HideInInspector] public bool paused;
 
     // Move forward
     private void Update() {
+        if (paused) return;
+
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 
         if (turning) {
