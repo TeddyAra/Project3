@@ -57,6 +57,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
     // An event has been received
     public void OnEvent(EventData photonEvent) {
+        if (new Byte[] { 201, 202, 206, 212 }.Contains(photonEvent.Code)) return;
         Debug.Log($"Event received with code {photonEvent.Code}");
 
         // Check if the event is for a new ship

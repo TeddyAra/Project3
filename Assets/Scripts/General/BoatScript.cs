@@ -25,27 +25,6 @@ public class BoatScript : MonoBehaviour {
         }
     }
 
-    // Only turn if not already turning
-    /*public void Turn(bool left) {
-        *//*StopAllCoroutines();
-        StartCoroutine(Turn(left));*//*
-        transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));
-    }*/
-
-    // Turn the boat
-    /*IEnumerator Turn(bool left) {
-        Debug.Log("Turn");
-        float timer = 0;
-
-        while (timer <= turnTime) {
-            timer += Time.deltaTime;
-            transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));
-            yield return null;
-        }
-
-        yield return null;
-    }*/
-
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
         if (collision.transform.CompareTag("Obstacle")) {

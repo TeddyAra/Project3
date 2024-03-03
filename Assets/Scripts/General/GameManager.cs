@@ -53,7 +53,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public const byte NewShip = 1;
     [HideInInspector] public const byte TutorialShip = 2;
     [HideInInspector] public const byte TaskDone = 3;
-    [HideInInspector] public const byte StartTutorial = 4;
 
     void Start() {
         view = GetComponent<PhotonView>();
@@ -97,6 +96,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                 break;
             // The second player
             case 2:
+                if (singlePlayerTest) return;
                 // Make a normal camera and map ui
                 Instantiate(normalCameraPrefab);
                 Instantiate(mapPrefab);
@@ -179,16 +179,12 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             case TaskDone:
                 twoDone = true;
                 break;
-            case StartTutorial:
-                if (skipTutorial) StartGame();
-                else StartCoroutine(Tutorial());
-                break;
         }
     }
 
+    // Ensures that game logic is handled by player 1
     [PunRPC]
     void StartGameRPC() {
-        Debug.Log("RPC");
         if (skipTutorial) StartGame();
         else StartCoroutine(Tutorial());
     }
