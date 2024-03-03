@@ -54,6 +54,16 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public const byte TutorialShip = 2;
     [HideInInspector] public const byte TaskDone = 3;
 
+    private void OnEnable() {
+        Debug.Log("OnEvent() Enabled");
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable() {
+        Debug.Log("OnEvent() Disabled");
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
     void Start() {
         view = GetComponent<PhotonView>();
 
