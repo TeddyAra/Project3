@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RowboatMove : Obstacle{
+public class RowboatMove : Obstacle {
     [SerializeField] private float rowDistance;
     [SerializeField] private float rowSpeed;
     [SerializeField] private float rotationSpeed;
@@ -20,7 +20,7 @@ public class RowboatMove : Obstacle{
         float distance = 0f;
 
         while (distance < rowDistance) {
-            //Debug.Log(distance + " " + rowDistance);
+            if (paused) yield return null;
             transform.Translate(Vector3.forward * rowSpeed * Time.deltaTime);
             distance += rowSpeed * Time.deltaTime;
             yield return null;
@@ -29,6 +29,7 @@ public class RowboatMove : Obstacle{
 
         float rotated = 0f;
         while (rotated < 90) {
+            if (paused) yield return null;
             transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
             transform.Translate(Vector3.forward * rowSpeed * Time.deltaTime);
             rotated += rotationSpeed * Time.deltaTime;

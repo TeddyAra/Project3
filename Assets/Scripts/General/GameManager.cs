@@ -104,7 +104,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                     if (skipTutorial) StartGame();
                     else StartCoroutine(Tutorial());
                 }*/
-                SendEvent(StartTutorial);
+                //SendEvent(StartTutorial);
+                view.RPC("StartGameRPC", RpcTarget.Others);
                 break;
         }
     }
@@ -153,11 +154,21 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private void Pause() {
         Debug.Log("Paused");
         tutorialShipScript.paused = true;
+
+        Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
+        foreach (Obstacle obstacle in obstacles) {
+            obstacle.paused = true;
+        }
     }
 
     private void Resume() {
         Debug.Log("Resumed");
         tutorialShipScript.paused = false;
+
+        Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
+        foreach (Obstacle obstacle in obstacles) {
+            obstacle.paused = false;
+        }
     }
 
     public void OnEvent(EventData photonEvent) {
@@ -173,6 +184,13 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                 else StartCoroutine(Tutorial());
                 break;
         }
+    }
+
+    [PunRPC]
+    void StartGameRPC() {
+        Debug.Log("RPC");
+        if (skipTutorial) StartGame();
+        else StartCoroutine(Tutorial());
     }
 
     void StartGame() {
