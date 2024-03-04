@@ -13,7 +13,7 @@ using UnityEngine.Assertions.Must;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
+//using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private GameObject iconPrefab;
