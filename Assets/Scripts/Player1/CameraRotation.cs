@@ -67,7 +67,6 @@ public class CameraRotation : MonoBehaviour {
         if (Input.touchCount >= 2) {
             lastDistance = lastDistance == 0 ? (Input.GetTouch(0).position - Input.GetTouch(1).position).magnitude : fingerDistance;
             fingerDistance = (Input.GetTouch(0).position - Input.GetTouch(1).position).magnitude;
-            Debug.Log(fingerDistance + " " + lastDistance);
             cam.fieldOfView = Mathf.Clamp(cam.fieldOfView + (lastDistance - fingerDistance) * zoomStrength, minFov, maxFov);
         } else {
             lastDistance = 0;

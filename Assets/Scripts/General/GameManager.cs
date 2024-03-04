@@ -6,11 +6,8 @@ using TMPro;
 using System;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
-using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
-using Unity.VisualScripting;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour, IOnEventCallback {
     [Serializable]
     public struct Wave {
         public bool newWave;
@@ -23,19 +20,22 @@ public class GameManager : MonoBehaviour {
     [Header("Waves")]
     [SerializeField] private List<Wave> waves;
 
-    [Header("References")]
+    [Header("Testing")]
     [SerializeField] private bool singlePlayerTest;
+    [SerializeField] private bool skipTutorial;
+
+    [Header("Tutorial")]
+    [SerializeField] private GameObject tutorialShip;
+    [SerializeField] private Transform tutorialSpawn;
+
+    [Header("References")]
     [SerializeField] private GameObject cameraPrefab;
     [SerializeField] private GameObject mapPrefab;
     [SerializeField] private TMP_Text codeText;
     [SerializeField] private GameObject normalCameraPrefab;
     [SerializeField] private GameObject shipPrefab;
-    public List<Material> materials = new List<Material>();
-
-    [Header("Settings")]
-    [SerializeField] private float shipDistance;
-    [SerializeField] private float shipSpeed;
-    [SerializeField] private float cameraHeight;
+    [SerializeField] private Transform cameraPos;
+    [SerializeField] private Pinwheel.Poseidon.PWater water;
 
     private PhotonView view;
     private bool gameStarted = false;
@@ -45,81 +45,169 @@ public class GameManager : MonoBehaviour {
     private bool waitingForWin = false;
     private List<Transform> spawnPoints = new List<Transform>();
     private List<Transform> obstaclePoints = new List<Transform>();
+    private Transform cam;
+
+    private bool twoDone;
+    private BoatScript tutorialShipScript;
+
     [HideInInspector] public const byte NewShip = 1;
+    [HideInInspector] public const byte TutorialShip = 2;
+    [HideInInspector] public const byte TaskDone = 3;
+
+    private void OnEnable() {
+        Debug.Log("OnEvent() Enabled");
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable() {
+        Debug.Log("OnEvent() Disabled");
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
 
     void Start() {
         view = GetComponent<PhotonView>();
+
+        // Update the waves list to work with new waves
+        for (int i = 0; i < waves.Count; i++) {
+            if (waves[i].newWave && waves[i].spawnDelay <= 0) {
+                Wave newWave = waves[i];
+                newWave.spawnDelay = 1;
+                waves[i] = newWave;
+            }
+        }
+
+        // Display the code of the room at the top of the screen
+        if (PhotonNetwork.CurrentRoom != null) codeText.text = "Code: " + PhotonNetwork.CurrentRoom.Name;
 
         // Check which player number the player has
         switch (PhotonNetwork.PlayerList.Length) {
             // The first player
             case 1: 
-                // Make the watch tower camera
+                // If testing
                 if (singlePlayerTest) {
-                    Instantiate(normalCameraPrefab);
+                    // Make a normal camera
+                    //Instantiate(normalCameraPrefab);
+                    cam = Instantiate(cameraPrefab, cameraPos.position, Quaternion.Euler(90, -90, 0)).GetComponentInChildren<Camera>().transform;
+
+                    // Change the code text's parent
                     GameObject map = Instantiate(mapPrefab);
                     GameObject parent = codeText.transform.parent.gameObject;
                     codeText.transform.SetParent(map.transform);
                     Destroy(parent);
-                    StartGame();
+
+                    // Start the game
+                    if (skipTutorial) StartGame();
+                    else StartCoroutine(Tutorial());
+                // If not testing
                 } else {
-                    Instantiate(cameraPrefab, Vector3.up * cameraHeight, Quaternion.Euler(90, -90, 0));
+                    // Instantiate the gyroscope camera
+                    cam = Instantiate(cameraPrefab, cameraPos.position, Quaternion.Euler(90, -90, 0)).GetComponentInChildren<Camera>().transform;
                 }
                 break;
             // The second player
             case 2:
+                if (singlePlayerTest) return;
                 // Make a normal camera and map ui
                 Instantiate(normalCameraPrefab);
                 Instantiate(mapPrefab);
-                if (!singlePlayerTest) StartGame();
+                /*if (!singlePlayerTest) {
+                    if (skipTutorial) StartGame();
+                    else StartCoroutine(Tutorial());
+                }*/
+                //SendEvent(StartTutorial);
+                view.RPC("StartGameRPC", RpcTarget.Others);
                 break;
         }
+    }
 
-        // Display the code of the room at the top of the screen
-        if (PhotonNetwork.CurrentRoom != null) codeText.text = "Code: " + PhotonNetwork.CurrentRoom.Name;
+    private void SendEvent(byte code) {
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+        if (PhotonNetwork.RaiseEvent(code, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
+    }
+
+    IEnumerator Tutorial() {
+        Debug.Log("Tutorial started");
+
+        // Make tutorial ship
+        GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
+        ship.GetComponent<SimpleBuoyController>().water = water;
+        tutorialShipScript = ship.GetComponent<BoatScript>();
+
+        // Send event to other player
+        SendEvent(TutorialShip);
+
+        // Pause the game
+        Pause();
+
+        // Wait for player 1 to look at the ship
+        bool shipFound = false;
+        while (!shipFound) {
+            RaycastHit hit;
+            if (Physics.Raycast(cam.position, cam.forward, out hit)) {
+                if (hit.transform.gameObject == ship) {
+                    shipFound = true;
+                    Debug.Log("Ship found");
+                }
+            }
+            yield return null;
+        }
+
+        // Wait for both players to be done
+        while (!twoDone) {
+            yield return null;
+        }
+
+        // Resume the game
+        Resume();
+    }
+
+    private void Pause() {
+        Debug.Log("Paused");
+        tutorialShipScript.paused = true;
+
+        Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
+        foreach (Obstacle obstacle in obstacles) {
+            obstacle.paused = true;
+        }
+    }
+
+    private void Resume() {
+        Debug.Log("Resumed");
+        tutorialShipScript.paused = false;
+
+        Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
+        foreach (Obstacle obstacle in obstacles) {
+            obstacle.paused = false;
+        }
+    }
+
+    public void OnEvent(EventData photonEvent) {
+        Debug.Log($"Event received with code {photonEvent.Code}");
+
+        // Check which event for the tutorial it is
+        switch (photonEvent.Code) {
+            case TaskDone:
+                twoDone = true;
+                break;
+        }
+    }
+
+    // Ensures that game logic is handled by player 1
+    [PunRPC]
+    void StartGameRPC() {
+        if (skipTutorial) StartGame();
+        else StartCoroutine(Tutorial());
     }
 
     void StartGame() {
         gameStarted = true;
         codeText.text = "";
         Debug.Log("Game started");
-
-        /*for (int i = 0; i < 4; i++) {
-            Vector3 pos = Vector3.zero;
-            Quaternion rot = Quaternion.Euler(0, i * 90, 0);
-            switch (i) {
-                case 0:
-                    pos.x -= shipDistance;
-                    pos.z -= shipDistance;
-                    break;
-                case 1:
-                    pos.x -= shipDistance;
-                    pos.z += shipDistance;
-                    break;
-                case 2:
-                    pos.x += shipDistance;
-                    pos.z += shipDistance;
-                    break;
-                case 3:
-                    pos.x += shipDistance;
-                    pos.z -= shipDistance;
-                    break;
-            }
-
-            GameObject ship = PhotonNetwork.Instantiate(shipPrefab.name, pos, rot);
-            ship.GetComponentsInChildren<Renderer>()[1].material = materials[i];
-            ships.Add(ship);
-        }*/
     }
 
     void Update() {
         // Don't do anything if there's no game to play or if not managing the game
         if (!gameStarted) return;
-
-        // Move all ships
-        /*foreach (GameObject ship in ships) {
-            ship.transform.Translate(Vector3.forward * Time.deltaTime * shipSpeed);
-        }*/
 
         // Checks if the game has been won
         if (waitingForWin) {
@@ -140,6 +228,7 @@ public class GameManager : MonoBehaviour {
             Debug.Log("Ship made");
             // Spawn the ship and reset the spawn timer
             GameObject ship = PhotonNetwork.Instantiate(waves[currentIndex].shipType.name, waves[currentIndex].spawnPoint.position, waves[currentIndex].spawnPoint.rotation);
+            ship.GetComponent<SimpleBuoyController>().water = water;
             ships.Add(ship);
             spawnTimer = 0;
 
@@ -149,8 +238,7 @@ public class GameManager : MonoBehaviour {
             }
 
             // Let the other player know a ship has spawned
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-            if (PhotonNetwork.RaiseEvent(NewShip, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log("Event sent");
+            SendEvent(NewShip);
 
             // Check if it's the end of the game or not
             if (currentIndex != waves.Count - 1) {
