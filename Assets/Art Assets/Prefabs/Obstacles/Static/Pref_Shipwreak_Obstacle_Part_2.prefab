@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pref_Shipwreak_Obstacle_Part_2
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bb21f4d50c1dbb84b89bfea5e42c61b6,
+        type: 3}
+      propertyPath: m_TagString
+      value: Obstacle
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
