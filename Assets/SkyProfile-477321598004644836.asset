@@ -63,8 +63,8 @@ MonoBehaviour:
   horizonThickness: 1
   horizonExponent: 5
   horizonStep: 1000
-  fogSyncOption: 2
-  fogColor: {r: 0, g: 0, b: 0, a: 0}
+  fogSyncOption: 4
+  fogColor: {r: 0.21761093, g: 0.16954434, b: 0.2830189, a: 0}
   enableStars: 1
   starsStartPosition: 0.006
   starsEndPosition: 1
@@ -240,7 +240,7 @@ Material:
     - _SunSoftEdge: 0
     m_Colors:
     - _DetailOverlayTintColor: {r: 0, g: 0, b: 0, a: 0}
-    - _FogColor: {r: 0, g: 0, b: 0, a: 0}
+    - _FogColor: {r: 0.21761093, g: 0.16954434, b: 0.2830189, a: 0}
     - _GroundColor: {r: 0.1981132, g: 0.1981132, b: 0.1981132, a: 1}
     - _HorizonCloudColor: {r: 1, g: 1, b: 1, a: 1}
     - _HorizonColor: {r: 0.38431373, g: 0.48638386, b: 0.6509804, a: 1}
