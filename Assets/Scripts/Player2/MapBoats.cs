@@ -94,6 +94,9 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
             case GameManager.CheckForLeft:
                 checkLeft = true;
                 break;
+            case GameManager.NextClicked:
+                Next();
+                break;
         }
     }
 
@@ -144,6 +147,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     }
 
     public void Next() {
+        Debug.Log("Next clicked");
         if (futureTexts.Count == 0) {
             SendEvent(GameManager.TaskDone);
             HideAnnouncement();

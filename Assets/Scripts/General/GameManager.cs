@@ -72,6 +72,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public const byte HideText = 5;
     [HideInInspector] public const byte CheckForLeft = 6;
     [HideInInspector] public const byte CheckForReady = 7;
+    [HideInInspector] public const byte NextClicked = 8;
 
     private void OnEnable() {
         Debug.Log("OnEvent() Enabled");
@@ -154,7 +155,13 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void Next() {
-        nextClicked = true;
+        /*if (handling) nextClicked = true;
+        else twoDone = true;
+
+        Debug.Log(handling + " " + twoDone);*/
+        //SendEvent(NextClicked);
+        if (!handling) map.Next();
+        else nextClicked = true;
     }
 
     private void Announce(string text) {
