@@ -352,20 +352,20 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         Debug.Log("Paused");
         tutorialShipScript.paused = true;
 
-        Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
+        /*Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
         foreach (Obstacle obstacle in obstacles) {
             obstacle.paused = true;
-        }
+        }*/
     }
 
     private void Resume() {
         Debug.Log("Resumed");
         tutorialShipScript.paused = false;
 
-        Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
+        /*Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
         foreach (Obstacle obstacle in obstacles) {
             obstacle.paused = false;
-        }
+        }*/
     }
 
     public void OnEvent(EventData photonEvent) {

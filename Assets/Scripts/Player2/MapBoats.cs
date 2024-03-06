@@ -212,8 +212,9 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     }
 
     public void StartTurn(bool left) {
-        selectedBoat.GetComponent<BoatScript>().turning = true;
-        selectedBoat.GetComponent<BoatScript>().left = left;
+        BoatScript script = selectedBoat.GetComponent<BoatScript>();
+        script.turning = true;
+        script.left = left;
         Debug.Log("Started turning");
     }
 
