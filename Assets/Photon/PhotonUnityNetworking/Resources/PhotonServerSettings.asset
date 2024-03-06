@@ -44,6 +44,8 @@ MonoBehaviour:
   - InitBoatRPC
   - Test
   - StartGameRPC
+  - HideReady
+  - ShowReady
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

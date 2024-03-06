@@ -7,6 +7,7 @@ using System;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
+using System.Linq;
 
 public class GameManager : MonoBehaviour, IOnEventCallback {
     [Serializable]
@@ -198,8 +199,13 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void Ready() {
+        Debug.Log("Ready clicked");
         if (handling) oneReady = true;
-        else twoReady = true;
+        else view.RPC("ReadyRPC", RpcTarget.Others);
+    }
+
+    [PunRPC] private void ReadyRPC() {
+        twoReady = true;
     }
 
     [PunRPC]
@@ -290,7 +296,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         HideAnnouncement();
         view.RPC("ShowReady", RpcTarget.All);
-        while (!twoReady || !oneReady) yield return null;
+        while (!twoReady || !oneReady) {
+            Debug.Log(oneReady + " " + twoReady);
+            yield return null;
+        }
         view.RPC("HideReady", RpcTarget.All);
 
         // Wait for the ship to get close to the obstacle
@@ -357,6 +366,9 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void OnEvent(EventData photonEvent) {
+        // Ignore some events
+        if (new byte[] { 201, 202, 206, 212, 254 }.Contains(photonEvent.Code)) return;
+
         Debug.Log($"Event received with code {photonEvent.Code}");
 
         // Check which event for the tutorial it is
