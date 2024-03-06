@@ -112,7 +112,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         GameObject[] newBoats = newBoats1.Concat(newBoats2).ToArray().Concat(newBoats3).ToArray();
 
         // If this is the first ship
-        if (boats.Count == 0) {
+        /*if (boats.Count == 0) {
             // Add the boat to the boats list
             boats.Add(newBoats[0]);
 
@@ -127,7 +127,10 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
             Select(0);
             return;
-        }
+        }*/
+
+        bool selecting = false;
+        if (boats.Count == 0) selecting = true;
 
         // If this isn't the first ship
         foreach (GameObject boat in newBoats) {
@@ -146,6 +149,10 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 boatIcons.Add(boat.transform, newIcon.GetComponent<RectTransform>());
                 return;
             }
+        }
+
+        if (selecting) {
+            Select(0);
         }
     }
 

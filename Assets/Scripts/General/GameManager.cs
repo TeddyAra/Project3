@@ -188,6 +188,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private void HideWaiting() {
         playerReady.text = "";
         nextButton.SetActive(true);
+        twoDone = false;
     }
 
     public void ShipFail() { 
