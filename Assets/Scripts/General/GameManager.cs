@@ -304,7 +304,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         // Wait for the ship to get close to the obstacle
         Resume();
-        while ((ship.transform.position - tutorialObstacle.position).magnitude > minimumDistance) yield return null;
+        while ((ship.transform.position - tutorialObstacle.position).magnitude > minimumDistance) {
+            Debug.Log((ship.transform.position - tutorialObstacle.position).magnitude);
+            yield return null;
+        }
 
         // Announcement telling the player to tell the other player to watch for obstacles
         Pause();

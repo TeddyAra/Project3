@@ -214,10 +214,12 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     public void StartTurn(bool left) {
         selectedBoat.GetComponent<BoatScript>().turning = true;
         selectedBoat.GetComponent<BoatScript>().left = left;
+        Debug.Log("Started turning");
     }
 
     public void StopTurn() {
         selectedBoat.GetComponent<BoatScript>().turning = false;
+        Debug.Log("Stopped turning");
     }
 
     // Select a boat
