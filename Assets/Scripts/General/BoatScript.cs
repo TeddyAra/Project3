@@ -33,22 +33,24 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
-        if (view.IsMine) Debug.Log("Mine");
+        Debug.Log("Mine?");
+        if (view.IsMine) return;
+        Debug.Log("Yes");
 
         if (collision.transform.CompareTag("Obstacle")) {
             gameObject.SetActive(false);
             GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
 
-            MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+            //MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-            GameObject icon = mapScript.boatIcons[transform].gameObject;
+            /*GameObject icon = mapScript.boatIcons[transform].gameObject;
 
             if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
             mapScript.arrows.Remove(transform);
             mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
             mapScript.boatIcons.Remove(transform);
             mapScript.boats.Remove(gameObject);
-            Destroy(icon);
+            Destroy(icon);*/
 
             manager.ShipFail();
             manager.ships.Remove(gameObject);
