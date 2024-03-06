@@ -17,7 +17,6 @@ Material:
   - OVERHEAD_CLOUD
   - STARS
   - STARS_LAYER_0
-  - STARS_LAYER_1
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -42,7 +41,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _StarsCubemap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 8900000, guid: 59c7b8a8456c65d4aa28c47a49e4ea49, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _StarsTwinkleMap:
@@ -68,9 +67,9 @@ Material:
     - _HorizonCloudStart: -0.01
     - _HorizonCloudStartPosition: -0.01
     - _HorizonCloudStep: 17
-    - _HorizonExponent: 5.1
-    - _HorizonStep: 256
-    - _HorizonThickness: 0.641
+    - _HorizonExponent: 8.33
+    - _HorizonStep: 107
+    - _HorizonThickness: 1
     - _MoonGlow: 0.13
     - _MoonLightIntensity: 0.1
     - _MoonSize: 0.113
@@ -85,22 +84,22 @@ Material:
     - _OverheadCloudRemapMin: 1
     - _OverheadCloudSize: 7.8
     - _OverheadCloudStep: 3
-    - _StarsDensity0: 0.59
-    - _StarsDensity1: 0.34
+    - _StarsDensity0: 0.927
+    - _StarsDensity1: 1
     - _StarsDensity2: 0.45
     - _StarsEnd: 1
-    - _StarsEndPosition: 1
-    - _StarsGlow0: 0.01
+    - _StarsEndPosition: 0.923
+    - _StarsGlow0: 0.11
     - _StarsGlow1: 0.01
     - _StarsGlow2: 0.01
-    - _StarsOpacity: 0.196
-    - _StarsSize0: 0.42
-    - _StarsSize1: 0.53
+    - _StarsOpacity: 0.79
+    - _StarsSize0: 0.384
+    - _StarsSize1: 0.596
     - _StarsSize2: 0.46
     - _StarsStart: 0.25
-    - _StarsStartPosition: 0.154
+    - _StarsStartPosition: -0.799
     - _StarsTwinkle0: 5
-    - _StarsTwinkle1: 6
+    - _StarsTwinkle1: -0.2
     - _StarsTwinkle2: 2
     - _SunGlow: 0
     - _SunLightIntensity: 0
@@ -109,8 +108,8 @@ Material:
     m_Colors:
     - _DetailOverlayColor: {r: 0, g: 0, b: 0, a: 0}
     - _DetailOverlayTintColor: {r: 0, g: 0, b: 0, a: 0}
-    - _FogColor: {r: 0.24377003, g: 0.2305536, b: 0.31132078, a: 0}
-    - _GroundColor: {r: 0.1981132, g: 0.1981132, b: 0.1981132, a: 1}
+    - _FogColor: {r: 0.3261044, g: 0.3050018, b: 0.4339623, a: 0}
+    - _GroundColor: {r: 0.07609469, g: 0.14983891, b: 0.16981131, a: 1}
     - _HorizonCloudColor: {r: 0.5946535, g: 0.49009904, b: 0.66, a: 1}
     - _HorizonColor: {r: 0.20461018, g: 0.21002254, b: 0.3584906, a: 1}
     - _MoonColor: {r: 1, g: 1, b: 1, a: 1}
@@ -119,7 +118,7 @@ Material:
     - _OverheadCloudColor: {r: 0.3573044, g: 0.29343182, b: 0.3962264, a: 0.09803922}
     - _SkyColor: {r: 0.079293735, g: 0.06274511, b: 0.20784314, a: 1}
     - _StarsColor0: {r: 0.9254902, g: 0.88081425, b: 0.5432628, a: 1}
-    - _StarsColor1: {r: 1, g: 0.24056602, b: 0.8628801, a: 1}
+    - _StarsColor1: {r: 1, g: 0.9577489, b: 0, a: 1}
     - _StarsColor2: {r: 0, g: 0.8351569, b: 1, a: 1}
     - _SunColor: {r: 0, g: 0, b: 0, a: 0}
     - _SunDirection: {r: -1, g: -1, b: -1, a: 0}
@@ -139,34 +138,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyColor: {r: 0.079293735, g: 0.06274511, b: 0.20784314, a: 1}
   horizonColor: {r: 0.20461018, g: 0.21002254, b: 0.3584906, a: 1}
-  groundColor: {r: 0.1981132, g: 0.1981132, b: 0.1981132, a: 1}
-  horizonThickness: 0.641
-  horizonExponent: 5.1
-  horizonStep: 256
+  groundColor: {r: 0.07609469, g: 0.14983891, b: 0.16981131, a: 1}
+  horizonThickness: 1
+  horizonExponent: 8.33
+  horizonStep: 107
   fogSyncOption: 4
-  fogColor: {r: 0.24377003, g: 0.2305536, b: 0.31132078, a: 0}
+  fogColor: {r: 0.3261044, g: 0.3050018, b: 0.4339623, a: 0}
   enableStars: 1
-  starsStartPosition: 0.154
-  starsEndPosition: 1
-  starsOpacity: 0.196
-  starsLayerCount: 2
+  starsStartPosition: -0.799
+  starsEndPosition: 0.923
+  starsOpacity: 0.79
+  starsLayerCount: 1
   starsColor0: {r: 0.9254902, g: 0.88081425, b: 0.5432628, a: 1}
-  starsColor1: {r: 1, g: 0.24056602, b: 0.8628801, a: 1}
+  starsColor1: {r: 1, g: 0.9577489, b: 0, a: 1}
   starsColor2: {r: 0, g: 0.8351569, b: 1, a: 1}
-  starsDensity0: 0.59
-  starsDensity1: 0.34
+  starsDensity0: 0.927
+  starsDensity1: 1
   starsDensity2: 0.45
-  starsSize0: 0.42
-  starsSize1: 0.53
+  starsSize0: 0.384
+  starsSize1: 0.596
   starsSize2: 0.46
-  starsGlow0: 0.01
+  starsGlow0: 0.11
   starsGlow1: 0.01
   starsGlow2: 0.01
   starsTwinkle0: 5
-  starsTwinkle1: 6
+  starsTwinkle1: -0.2
   starsTwinkle2: 2
   useBakedStars: 0
-  starsCubemap: {fileID: 0}
+  starsCubemap: {fileID: 8900000, guid: 59c7b8a8456c65d4aa28c47a49e4ea49, type: 2}
   starsTwinkleMap: {fileID: 0}
   enableSun: 0
   sunTexture: {fileID: 0}
@@ -234,7 +233,6 @@ Material:
   - OVERHEAD_CLOUD
   - STARS
   - STARS_LAYER_0
-  - STARS_LAYER_1
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
