@@ -77,10 +77,13 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
             case GameManager.Announcement:
                 ShowAnnouncement();
                 Announce((string)photonEvent.Parameters[0]);
+                Debug.Log("Announcement: " + (string)photonEvent.Parameters[0]);
 
                 futureTexts.Clear();
-                for (int i = 0; i < photonEvent.Parameters.Count; i++) {
-                    futureTexts.Add((string)photonEvent.Parameters[(byte)i]);
+                if (photonEvent.Parameters.Count > 1) {
+                    for (int i = 0; i < photonEvent.Parameters.Count; i++) {
+                        futureTexts.Add((string)photonEvent.Parameters[(byte)i]);
+                    }
                 }
                 break;
             case GameManager.HideText:

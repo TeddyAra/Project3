@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     public TMP_Text playerReady;
     [SerializeField] private GameObject announcement;
     public Button readyButton;
+    [SerializeField] private TMP_Text announcementText;
+    [SerializeField] private GameObject nextButton;
 
     [Header("References")]
     [SerializeField] private GameObject cameraPrefab;
@@ -58,7 +60,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private BoatScript tutorialShipScript;
     private bool nextClicked;
     private bool tutorialDone;
-    private TMP_Text announcementText;
     private MapBoats map;
     private bool oneReady;
     private bool twoReady;
@@ -115,8 +116,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                     announcement.transform.SetParent(map.transform);
 
                     //announcement.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-                    announcementText = announcement.transform.GetComponentInChildren<TMP_Text>();
-                    readyButton = announcement.transform.GetComponentInChildren<Button>();
+                    //announcementText = announcement.transform.GetComponentInChildren<TMP_Text>();
+                    //readyButton = announcement.transform.GetComponentInChildren<Button>();
 
                     Destroy(parent);
 
@@ -172,10 +173,12 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
     private void ShowWaiting() {
         playerReady.text = "Waiting for the other player...";
+        nextButton.SetActive(false);
     }
 
     private void HideWaiting() {
         playerReady.text = "";
+        nextButton.SetActive(true);
     }
 
     public void ShipFail() { 
@@ -212,7 +215,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         while (!nextClicked) yield return null;
 
         ShowWaiting();
-        while (!twoDone) yield return null;
+        while (!twoDone) {
+            Debug.Log("Waiting");
+            yield return null;
+        }
         HideWaiting();
 
         // Make tutorial ship
