@@ -21,7 +21,7 @@ public class BoatScript : MonoBehaviour {
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 
         if (turning) {
-            Debug.Log("Turning: " + turnSpeed + " | " + Time.deltaTime + " | " + left);
+            
             transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));
         }
     }
