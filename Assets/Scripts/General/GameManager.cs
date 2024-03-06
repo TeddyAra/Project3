@@ -221,6 +221,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
     IEnumerator Tutorial() {
         Debug.Log("Tutorial started");
+        codeText.text = "";
 
         // Announcement telling the player to look around
         ShowAnnouncement();
@@ -347,6 +348,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         Resume();
         HideAnnouncement();
+
+        gameStarted = true;
     }
 
     private void Pause() {
