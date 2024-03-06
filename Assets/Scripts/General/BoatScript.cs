@@ -14,8 +14,6 @@ public class BoatScript : MonoBehaviour {
     [HideInInspector] public bool left;
     [HideInInspector] public bool paused;
 
-    private float targetRotation;
-
     // Move forward
     private void Update() {
         if (paused) return;
@@ -23,14 +21,8 @@ public class BoatScript : MonoBehaviour {
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 
         if (turning) {
-            /*Debug.Log("Turning: " + turnSpeed + " | " + Time.deltaTime + " " + left);
-            transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));*/
-
-            float rotationAmount = turnSpeed * Time.deltaTime * (left ? -1 : 1);
-            targetRotation += rotationAmount;
-
-            // Smoothly rotate towards the target rotation
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, targetRotation, 0), turnTime * Time.deltaTime);
+            Debug.Log("Turning: " + turnSpeed + " | " + Time.deltaTime + " | " + left);
+            transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));
         }
     }
 

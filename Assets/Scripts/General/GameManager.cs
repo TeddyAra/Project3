@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     [SerializeField] private Pinwheel.Poseidon.PWater water;
 
     private PhotonView view;
-    private bool gameStarted = false;
+    [HideInInspector] public bool gameStarted = false;
     [HideInInspector] public List<GameObject> ships = new List<GameObject>();
     private float spawnTimer;
     private int currentIndex = 0;
@@ -243,7 +243,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
         ship.GetComponent<SimpleBuoyController>().water = water;
         tutorialShipScript = ship.GetComponent<BoatScript>();
-        SendEvent(TutorialShip);
+        SendEvent(NewShip);
 
         Pause();
 
@@ -298,10 +298,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         HideAnnouncement();
         view.RPC("ShowReady", RpcTarget.All);
-        while (!twoReady || !oneReady) {
-            Debug.Log(oneReady + " " + twoReady);
-            yield return null;
-        }
+        while (!twoReady || !oneReady) yield return null;
         view.RPC("HideReady", RpcTarget.All);
 
         // Wait for the ship to get close to the obstacle
