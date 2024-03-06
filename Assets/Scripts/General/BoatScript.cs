@@ -21,7 +21,7 @@ public class BoatScript : MonoBehaviour {
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 
         if (turning) {
-            
+            Debug.Log(transform.eulerAngles.y);
             transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));
         }
     }
@@ -34,13 +34,13 @@ public class BoatScript : MonoBehaviour {
 
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-
             GameObject icon = mapScript.boatIcons[transform].gameObject;
+
+            if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
             mapScript.arrows.Remove(transform);
             mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
             mapScript.boatIcons.Remove(transform);
             mapScript.boats.Remove(gameObject);
-            mapScript.currentSelection = -1;
             Destroy(icon);
 
             manager.ShipFail();
@@ -58,21 +58,22 @@ public class BoatScript : MonoBehaviour {
         Debug.Log(transform.tag[transform.tag.Length - 1] + " == " + other.transform.tag[other.tag.Length - 1]);
         if (transform.tag[transform.tag.Length - 1] == other.transform.tag[other.tag.Length - 1]) {
             // Ship is at the right port
-            boatsScript.PopUp("Yippee", Color.green, 4);
+            boatsScript.PopUp("Correct!", Color.green, 4);
             manager.ShipSucceed();
         } else {
             // Ship isn't at right port
-            boatsScript.PopUp("Womp womp", Color.red, 4);
+            boatsScript.PopUp("Incorrect...", Color.red, 4);
             manager.ShipFail();
         }
 
         MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
         GameObject icon = mapScript.boatIcons[transform].gameObject;
+
+        if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
         mapScript.arrows.Remove(transform);
         mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
         mapScript.boatIcons.Remove(transform);
         mapScript.boats.Remove(gameObject);
-        mapScript.currentSelection = -1;
         Destroy(icon);
 
         manager.ships.Remove(gameObject);

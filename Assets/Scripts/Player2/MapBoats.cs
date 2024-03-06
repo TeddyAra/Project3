@@ -28,7 +28,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public List<GameObject> boats = new List<GameObject>();
     [HideInInspector] public List<GameObject> icons = new List<GameObject>();
     [HideInInspector] public Dictionary<Transform, RectTransform> arrows = new Dictionary<Transform, RectTransform>();
-    private GameObject selectedBoat;
+    [HideInInspector] public GameObject selectedBoat;
     [HideInInspector] public int currentSelection;
     private float touchDist;
     private PhotonView view;
