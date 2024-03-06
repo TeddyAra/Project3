@@ -202,10 +202,12 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         else twoReady = true;
     }
 
+    [PunRPC]
     private void ShowReady() { 
         readyButton.transform.gameObject.SetActive(true);
     }
 
+    [PunRPC]
     private void HideReady() {
         readyButton.transform.gameObject.SetActive(false);
     }
@@ -287,9 +289,9 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         while (!nextClicked) yield return null;
 
         HideAnnouncement();
-        ShowReady();
+        view.RPC("ShowReady", RpcTarget.All);
         while (!twoReady || !oneReady) yield return null;
-        HideReady();
+        view.RPC("HideReady", RpcTarget.All);
 
         // Wait for the ship to get close to the obstacle
         Resume();

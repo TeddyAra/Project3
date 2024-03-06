@@ -40,7 +40,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks {
     }
 
     public void Click(string num) {
-        if (num == "x") joinCode.text = joinCode.text.Remove(joinCode.text.Length - 1, 1);
+        if (num == "x" && joinCode.text != "") joinCode.text = joinCode.text.Remove(joinCode.text.Length - 1, 1);
         else if (joinCode.text.Length == 5) return;
         else joinCode.text += num;
     }
