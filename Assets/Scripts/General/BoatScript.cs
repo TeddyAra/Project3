@@ -13,6 +13,11 @@ public class BoatScript : MonoBehaviour {
     [HideInInspector] public bool turning;
     [HideInInspector] public bool left;
     [HideInInspector] public bool paused;
+    private PhotonView view;
+
+    private void Start() {
+        view = GetComponent<PhotonView>();
+    }
 
     // Move forward
     private void Update() {
@@ -23,12 +28,13 @@ public class BoatScript : MonoBehaviour {
         if (turning) {
             Debug.Log(transform.eulerAngles.y);
             transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));
-            transform.eulerAngles = Vector3.zero;
         }
     }
 
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
+        if (view.IsMine) return;
+
         if (collision.transform.CompareTag("Obstacle")) {
             gameObject.SetActive(false);
             GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
@@ -52,6 +58,8 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for triggers with ports
     private void OnTriggerEnter(Collider other) {
+        if (view.IsMine) return;
+
         MapBoats boatsScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
         GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
 
