@@ -219,6 +219,11 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     }
 
     public void StartTurn(bool left) {
+        if (!manager.gameStarted) {
+            SendEvent(left ? GameManager.StartTurnLeft : GameManager.StartTurnRight);
+            return;
+        }
+
         BoatScript script = selectedBoat.GetComponent<BoatScript>();
         script.turning = true;
         script.left = left;
@@ -226,6 +231,11 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     }
 
     public void StopTurn() {
+        if (!manager.gameStarted) {
+            SendEvent(GameManager.StopTurn);
+            return;
+        }
+
         selectedBoat.GetComponent<BoatScript>().turning = false;
         Debug.Log("Stopped turning");
     }

@@ -74,6 +74,9 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public const byte CheckForLeft = 6;
     [HideInInspector] public const byte CheckForReady = 7;
     [HideInInspector] public const byte NextClicked = 8;
+    [HideInInspector] public const byte StartTurnLeft = 9;
+    [HideInInspector] public const byte StartTurnRight = 10;
+    [HideInInspector] public const byte StopTurn = 11;
 
     private void OnEnable() {
         Debug.Log("OnEvent() Enabled");
@@ -379,6 +382,17 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         switch (photonEvent.Code) {
             case TaskDone:
                 twoDone = true;
+                break;
+            case StartTurnLeft:
+                tutorialShipScript.turning = true;
+                tutorialShipScript.left = true;
+                break;
+            case StartTurnRight:
+                tutorialShipScript.turning = true;
+                tutorialShipScript.left = false;
+                break;
+            case StopTurn:
+                tutorialShipScript.turning = false;
                 break;
         }
     }

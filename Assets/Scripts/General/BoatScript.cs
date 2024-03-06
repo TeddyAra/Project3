@@ -23,6 +23,7 @@ public class BoatScript : MonoBehaviour {
         if (turning) {
             Debug.Log(transform.eulerAngles.y);
             transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime * (left ? -1 : 1));
+            transform.eulerAngles = Vector3.zero;
         }
     }
 
