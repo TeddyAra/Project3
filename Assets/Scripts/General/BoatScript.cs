@@ -33,7 +33,7 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
-        if (view.IsMine) return;
+        if (view.IsMine) Debug.Log("Mine");
 
         if (collision.transform.CompareTag("Obstacle")) {
             gameObject.SetActive(false);
@@ -52,16 +52,17 @@ public class BoatScript : MonoBehaviour {
 
             manager.ShipFail();
             manager.ships.Remove(gameObject);
-            Destroy(gameObject);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 
     // Checks for triggers with ports
     private void OnTriggerEnter(Collider other) {
-        if (view.IsMine) return;
+        if (view.IsMine) Debug.Log("Mine");
 
         MapBoats boatsScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
         GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+        MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
 
         // Check if it's the correct port
         Debug.Log(transform.tag[transform.tag.Length - 1] + " == " + other.transform.tag[other.tag.Length - 1]);
@@ -75,7 +76,6 @@ public class BoatScript : MonoBehaviour {
             manager.ShipFail();
         }
 
-        MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
         GameObject icon = mapScript.boatIcons[transform].gameObject;
 
         if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
@@ -86,6 +86,6 @@ public class BoatScript : MonoBehaviour {
         Destroy(icon);
 
         manager.ships.Remove(gameObject);
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
     }
 }
