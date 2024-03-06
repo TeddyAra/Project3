@@ -32,6 +32,8 @@ public class BoatScript : MonoBehaviour {
             GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
 
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+            GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+
             GameObject icon = mapScript.boatIcons[transform].gameObject;
             mapScript.arrows.Remove(transform);
             mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
@@ -40,22 +42,27 @@ public class BoatScript : MonoBehaviour {
             mapScript.currentSelection = -1;
             Destroy(icon);
 
-            GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
+            manager.ShipFail();
+            manager.ships.Remove(gameObject);
             Destroy(gameObject);
         }
     }
 
+    // Checks for triggers with ports
     private void OnTriggerEnter(Collider other) {
         MapBoats boatsScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+        GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
 
         // Check if it's the correct port
         Debug.Log(transform.tag[transform.tag.Length - 1] + " == " + other.transform.tag[other.tag.Length - 1]);
         if (transform.tag[transform.tag.Length - 1] == other.transform.tag[other.tag.Length - 1]) {
             // Ship is at the right port
             boatsScript.PopUp("Yippee", Color.green, 4);
+            manager.ShipSucceed();
         } else {
             // Ship isn't at right port
             boatsScript.PopUp("Womp womp", Color.red, 4);
+            manager.ShipFail();
         }
 
         MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
@@ -67,7 +74,7 @@ public class BoatScript : MonoBehaviour {
         mapScript.currentSelection = -1;
         Destroy(icon);
 
-        GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
+        manager.ships.Remove(gameObject);
         Destroy(gameObject);
     }
 }

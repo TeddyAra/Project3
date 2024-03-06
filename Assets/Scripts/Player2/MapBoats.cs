@@ -12,8 +12,6 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private GameObject iconPrefab;
@@ -37,12 +35,18 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     private TMP_Text codeText;
     private int prevTouches = 0;
     private bool leftShown = false;
-    private int tutorialStep = 0;
+    private GameManager manager;
+
+    [HideInInspector] public GameObject announcement;
+    [HideInInspector] public TMP_Text announcementText;
+    private List<string> futureTexts = new List<string>();
+    private bool checkLeft = false;
 
     void Start() {
         view = GetComponent<PhotonView>();
         icons = GameObject.FindGameObjectsWithTag("Icon").ToList();
         codeText = GameObject.FindGameObjectWithTag("Text").GetComponent<TMP_Text>();
+        manager = FindObjectOfType<GameManager>();
     }
 
     private void OnEnable() {
@@ -58,7 +62,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     // An event has been received
     public void OnEvent(EventData photonEvent) {
         // Ignore some events
-        if (new Byte[] { 201, 202, 206, 212 }.Contains(photonEvent.Code)) return;
+        if (new byte[] { 201, 202, 206, 212 }.Contains(photonEvent.Code)) return;
 
         Debug.Log($"Event received with code {photonEvent.Code}");
 
@@ -69,6 +73,21 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 break;
             case GameManager.TutorialShip:
                 NewShip();
+                break;
+            case GameManager.Announcement:
+                ShowAnnouncement();
+                Announce((string)photonEvent.Parameters[0]);
+
+                futureTexts.Clear();
+                for (int i = 0; i < photonEvent.Parameters.Count; i++) {
+                    futureTexts.Add((string)photonEvent.Parameters[(byte)i]);
+                }
+                break;
+            case GameManager.HideText:
+                HideWaiting();
+                break;
+            case GameManager.CheckForLeft:
+                checkLeft = true;
                 break;
         }
     }
@@ -117,6 +136,33 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 return;
             }
         }
+    }
+
+    public void Next() {
+        if (futureTexts.Count == 0) {
+            SendEvent(GameManager.TaskDone);
+            HideAnnouncement();
+            manager.playerReady.text = "Waiting for the other player...";
+        } else {
+            Announce(futureTexts[0]);
+            futureTexts.RemoveAt(0);
+        }
+    }
+
+    private void Announce(string text) {
+        announcementText.text = text;
+    }
+
+    private void ShowAnnouncement() {
+        announcement.SetActive(true);
+    }
+
+    private void HideAnnouncement() {
+        announcement.SetActive(false);
+    }
+
+    private void HideWaiting() {
+        manager.playerReady.text = "";
     }
 
     void Update() {
@@ -193,14 +239,14 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         leftPad.localPosition = new Vector2(leftPad.localPosition.x + (leftPad.sizeDelta.x * (leftShown ? -1 : 1)), 0);
         leftShown = !leftShown;
 
-        if (tutorialStep == 0) {
-            tutorialStep++;
+        if (checkLeft) {
+            checkLeft = false;
             SendEvent(GameManager.TaskDone);
         }
     }
 
     private void SendEvent(byte code) {
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = manager.singlePlayerTest ? ReceiverGroup.All : ReceiverGroup.Others };
         if (PhotonNetwork.RaiseEvent(code, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
     }
 }
