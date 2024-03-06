@@ -75,14 +75,16 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 NewShip();
                 break;
             case GameManager.Announcement:
+                string[] data = (string[])photonEvent.CustomData;
+
                 ShowAnnouncement();
-                Announce((string)photonEvent.Parameters[0]);
-                Debug.Log("Announcement: " + (string)photonEvent.Parameters[0]);
+                Announce(data[0]);
+                Debug.Log("Announcement: " + data[0]);
 
                 futureTexts.Clear();
-                if (photonEvent.Parameters.Count > 1) {
-                    for (int i = 0; i < photonEvent.Parameters.Count; i++) {
-                        futureTexts.Add((string)photonEvent.Parameters[(byte)i]);
+                if (data.Length > 1) {
+                    for (int i = 0; i < data.Length; i++) {
+                        futureTexts.Add(data[i]);
                     }
                 }
                 break;
