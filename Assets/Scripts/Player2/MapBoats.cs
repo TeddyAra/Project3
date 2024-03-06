@@ -97,6 +97,9 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
             case GameManager.NextClicked:
                 Next();
                 break;
+            case GameManager.CheckForReady:
+                Debug.Log("Ready");
+                break;
         }
     }
 
