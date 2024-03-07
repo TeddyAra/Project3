@@ -128,6 +128,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                     playerReady.transform.SetParent(map.transform);
                     announcement.transform.SetParent(map.transform);
                     readyButton.transform.SetParent(map.transform);
+                    gyroImage.transform.SetParent(map.transform);
+                    zoomImage.transform.SetParent(map.transform);
 
                     //announcement.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
                     //announcementText = announcement.transform.GetComponentInChildren<TMP_Text>();
