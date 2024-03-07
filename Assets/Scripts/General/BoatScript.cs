@@ -90,10 +90,10 @@ public class BoatScript : MonoBehaviour {
 
             if (transform.tag[transform.tag.Length - 1] == tag[tag.Length - 1]) {
                 // Ship is at the right port
-                manager.ShipSucceed(points);
+                manager.ShipSucceed(true);
             } else {
                 // Ship isn't at right port
-                manager.ShipFail();
+                manager.ShipSucceed(false);
             }
 
             manager.ships.Remove(gameObject);

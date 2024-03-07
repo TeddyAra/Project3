@@ -20,6 +20,9 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks {
     [SerializeField] private GameObject scores;
     [SerializeField] private GameObject settings;
 
+    [Header("Scores")]
+    [SerializeField] private TMP_Text highscore;
+
     private GameObject currentScreen;
 
     private void Start() {
@@ -80,10 +83,12 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks {
             case "scores":
                 scores.SetActive(true);
                 currentScreen = scores;
+                highscore.text = $"Highscore: {PlayerPrefs.GetInt("Highscore", 0)}";
                 break;
             case "settings":
                 settings.SetActive(true);
                 currentScreen = settings;
+                PlayerPrefs.SetInt("Highscore", 99999);
                 break;
         }
     }

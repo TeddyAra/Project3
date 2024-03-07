@@ -9,7 +9,12 @@ public class EndScreen : MonoBehaviour {
     [SerializeField] private TMP_Text text;
 
     private void Start() {
-        text.text = "Your score: " + Points.pointAmount;
+        int highscore = PlayerPrefs.GetInt("Highscore", 0);
+        if (Points.pointAmount > highscore) {
+            PlayerPrefs.SetInt("Highscore", Points.pointAmount);
+        }
+
+        text.text = $"Your score: {Points.pointAmount}\nHighscore: {highscore}";
     }
 
     public void Ready() {
