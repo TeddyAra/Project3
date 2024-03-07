@@ -14,6 +14,10 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class MapBoats : MonoBehaviour, IOnEventCallback {
+
+    [SerializeField] private AudioSource audioSource; 
+    public AudioClip pageTurn; 
+
     [SerializeField] private GameObject iconPrefab;
     [SerializeField] private float touchSize;
     [SerializeField] private RectTransform leftPad;
@@ -282,6 +286,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
     // Moves the left padding containing boat information to the left or right
     public void MovePadLeft() {
+        MovePadSound();  
         leftPad.localPosition = new Vector2(leftPad.localPosition.x + (guideMoveAmount * (leftShown ? -1 : 1)), 0);
         leftShown = !leftShown;
 
@@ -289,6 +294,11 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
             checkLeft = false;
             SendEvent(GameManager.TaskDone);
         }
+    }
+
+    public void MovePadSound()
+    {
+        audioSource.PlayOneShot(pageTurn);
     }
 
     private void SendEvent(byte code, int photonid = -1) {
