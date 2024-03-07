@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     [SerializeField] private TMP_Text announcementText;
     [SerializeField] private GameObject nextButton;
     [SerializeField] private float searchThreshHold;
+    [SerializeField] private GameObject zoomImage;
+    [SerializeField] private GameObject gyroImage;
 
     [Header("References")]
     [SerializeField] private GameObject cameraPrefab;
@@ -180,13 +182,17 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         announcementText.text = text;
     }
 
-    private void ShowAnnouncement() {
+    private void ShowAnnouncement(GameObject img = null) {
         announcement.SetActive(true);
+
+        if (img != null) img.SetActive(true);
     }
 
-    private void HideAnnouncement() {
+    private void HideAnnouncement(GameObject img = null) {
         announcement.SetActive(false);
         SendEvent(HideText);
+
+        if (img != null) img.SetActive(false);
     }
 
     private void ShowWaiting() {
@@ -201,13 +207,13 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void ShipFail() {
+        if (!tutorialDone) Points.pointAmount -= 100;
+
         tutorialFailed = true;
     }
 
-    public void ShipSucceed(int points) {
-        if (!tutorialDone) {
-            Points.pointAmount += points;
-        }
+    public void ShipSucceed(bool right) {
+        if (!tutorialDone) Points.pointAmount += right ? 100 : 50;
         
         tutorialDone = true;
     }
@@ -237,7 +243,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         codeText.text = "";
 
         // Announcement telling the player to look around
-        ShowAnnouncement();
+        ShowAnnouncement(gyroImage);
         Announce("Move your phone to look around the area!");
 
         SendEvent(Announcement, new string[] {
@@ -259,6 +265,9 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         SendEvent(NewShip);
 
         Pause();
+
+        HideAnnouncement(gyroImage);
+        ShowAnnouncement();
 
         // Announcement telling the player there's a new ship
         Announce("Me ship senses be tingling! Let’s investigate our newfound vessel!");
@@ -292,12 +301,12 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         }
 
         // Announcement telling the player to zoom in
-        ShowAnnouncement();
+        ShowAnnouncement(zoomImage);
         Announce("You young bucks have the luck of using one of them brand new touch-screen binoculars. Back in my day you had nothing but the own peepers in ye skull to scan the ocean waters!");
         while (!nextClicked) yield return null;
 
         // Wait for the player to zoom in
-        HideAnnouncement();
+        HideAnnouncement(zoomImage);
         Camera actualCam = cam.gameObject.GetComponent<Camera>();
         while (actualCam.fieldOfView > requiredZoom) yield return null;
 
