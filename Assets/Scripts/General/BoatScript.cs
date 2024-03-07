@@ -33,61 +33,60 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
-        Debug.Log("Mine?");
-        if (view.IsMine) return;
-        Debug.Log("Yes");
-
         if (collision.transform.CompareTag("Obstacle")) {
             gameObject.SetActive(false);
-            GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().ships.Remove(gameObject);
 
-            //MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+            if (view.IsMine) {
+                GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+                
+                manager.ships.Remove(gameObject);
+                manager.ShipFail();
+                PhotonNetwork.Destroy(gameObject);
+            } else {
+                MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+                GameObject icon = mapScript.boatIcons[transform].gameObject;
+
+                if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
+                mapScript.arrows.Remove(transform);
+                mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
+                mapScript.boatIcons.Remove(transform);
+                mapScript.boats.Remove(gameObject);
+                Destroy(icon);
+            }
+        }
+    }
+
+    // Checks for triggers with ports
+    private void OnTriggerEnter(Collider other) {
+        if (view.IsMine) {
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-            /*GameObject icon = mapScript.boatIcons[transform].gameObject;
+
+            manager.ships.Remove(gameObject);
+            PhotonNetwork.Destroy(gameObject);
+        } else {
+            GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+            MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+            MapBoats boatsScript = mapScript.GetComponent<MapBoats>();
+
+            // Check if it's the correct port
+            if (transform.tag[transform.tag.Length - 1] == other.transform.tag[other.tag.Length - 1]) {
+                // Ship is at the right port
+                boatsScript.PopUp("Correct!", Color.green, 4);
+                manager.ShipSucceed();
+            } else {
+                // Ship isn't at right port
+                boatsScript.PopUp("Incorrect...", Color.red, 4);
+                manager.ShipFail();
+            }
+
+            GameObject icon = mapScript.boatIcons[transform].gameObject;
 
             if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
             mapScript.arrows.Remove(transform);
             mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
             mapScript.boatIcons.Remove(transform);
             mapScript.boats.Remove(gameObject);
-            Destroy(icon);*/
-
-            manager.ShipFail();
-            manager.ships.Remove(gameObject);
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(icon);
         }
-    }
-
-    // Checks for triggers with ports
-    private void OnTriggerEnter(Collider other) {
-        if (view.IsMine) Debug.Log("Mine");
-
-        MapBoats boatsScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
-        GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
-
-        // Check if it's the correct port
-        Debug.Log(transform.tag[transform.tag.Length - 1] + " == " + other.transform.tag[other.tag.Length - 1]);
-        if (transform.tag[transform.tag.Length - 1] == other.transform.tag[other.tag.Length - 1]) {
-            // Ship is at the right port
-            boatsScript.PopUp("Correct!", Color.green, 4);
-            manager.ShipSucceed();
-        } else {
-            // Ship isn't at right port
-            boatsScript.PopUp("Incorrect...", Color.red, 4);
-            manager.ShipFail();
-        }
-
-        GameObject icon = mapScript.boatIcons[transform].gameObject;
-
-        if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
-        mapScript.arrows.Remove(transform);
-        mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
-        mapScript.boatIcons.Remove(transform);
-        mapScript.boats.Remove(gameObject);
-        Destroy(icon);
-
-        manager.ships.Remove(gameObject);
-        PhotonNetwork.Destroy(gameObject);
     }
 }
