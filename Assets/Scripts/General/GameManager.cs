@@ -198,6 +198,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void ShipFail() {
+        tutorialFailed = true;
     }
 
     public void ShipSucceed() { 
@@ -335,13 +336,17 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         HideAnnouncement();
         while (!tutorialDone) {
             Debug.Log("Waiting");
-            if (tutorialFailed) {
+            /*if (tutorialFailed) {
                 tutorialFailed = false;
 
                 ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
                 ship.GetComponent<SimpleBuoyController>().water = water;
                 tutorialShipScript = ship.GetComponent<BoatScript>();
                 SendEvent(NewShip);
+            }
+            yield return null;*/
+            if (tutorialFailed) {
+                FailedTutorial();
             }
             yield return null;
         }
@@ -353,6 +358,46 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         ShowAnnouncement();
         Announce("And that’s all words can help you with, so time to get your sea legs! Keep a weather eye on the horizon and may you have fair winds and following seas, ye whippersnapper!");
         
+        SendEvent(Announcement, new string[] {
+            "And that’s all words can help you with, so time to get your sea legs! Keep a weather eye on the horizon and may you have fair winds and following seas, ye whippersnapper!"
+        });
+        while (!nextClicked) yield return null;
+
+        // Show that player 1 is done
+        ShowWaiting();
+        while (!twoDone) yield return null;
+        HideWaiting();
+
+        Resume();
+        HideAnnouncement();
+
+        gameStarted = true;
+    }
+
+    private void FailedTutorial() {
+        tutorialFailed = false;
+        StopAllCoroutines();
+        StartCoroutine(RestartTutorial());
+    }
+
+    IEnumerator RestartTutorial() {
+        GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
+        ship.GetComponent<SimpleBuoyController>().water = water;
+        tutorialShipScript = ship.GetComponent<BoatScript>();
+        SendEvent(NewShip);
+
+        while (!tutorialDone) { 
+            if (tutorialFailed) {
+                FailedTutorial();
+            }
+            yield return null;
+        }
+
+        // Wait for both players to start the game
+        Pause();
+        ShowAnnouncement();
+        Announce("And that’s all words can help you with, so time to get your sea legs! Keep a weather eye on the horizon and may you have fair winds and following seas, ye whippersnapper!");
+
         SendEvent(Announcement, new string[] {
             "And that’s all words can help you with, so time to get your sea legs! Keep a weather eye on the horizon and may you have fair winds and following seas, ye whippersnapper!"
         });

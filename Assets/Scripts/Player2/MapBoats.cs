@@ -230,7 +230,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         Debug.Log("Started turning");*/
 
         Debug.Log("Start turning " + (left ? "left" : "right"));
-        SendEvent(left ? GameManager.StartTurnLeft : GameManager.StartTurnRight, selectedBoat.GetComponent<BoatScript>());
+        SendEvent(left ? GameManager.StartTurnLeft : GameManager.StartTurnRight);
         return;
     }
 
