@@ -393,21 +393,26 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         Debug.Log($"Event received with code {photonEvent.Code}");
 
+        BoatScript shipScript;
+
         // Check which event for the tutorial it is
         switch (photonEvent.Code) {
             case TaskDone:
                 twoDone = true;
                 break;
             case StartTurnLeft:
-                tutorialShipScript.turning = true;
-                tutorialShipScript.left = true;
+                shipScript = gameStarted ? tutorialShipScript : map.selectedBoat.GetComponent<BoatScript>();
+                shipScript.turning = true;
+                shipScript.left = true;
                 break;
             case StartTurnRight:
-                tutorialShipScript.turning = true;
-                tutorialShipScript.left = false;
+                shipScript = gameStarted ? tutorialShipScript : map.selectedBoat.GetComponent<BoatScript>();
+                shipScript.turning = true;
+                shipScript.left = false;
                 break;
             case StopTurn:
-                tutorialShipScript.turning = false;
+                shipScript = gameStarted ? tutorialShipScript : map.selectedBoat.GetComponent<BoatScript>();
+                shipScript.turning = false;
                 break;
         }
     }
