@@ -23,6 +23,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private Sprite selectionSprite;
     [SerializeField] private CustomButton turnLeft;
     [SerializeField] private CustomButton turnRight;
+    [SerializeField] private float guideMoveAmount;
 
     [SerializeField] private GameObject tab1; 
     [SerializeField] private GameObject tab2; 
@@ -281,7 +282,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
 
     // Moves the left padding containing boat information to the left or right
     public void MovePadLeft() {
-        leftPad.localPosition = new Vector2(leftPad.localPosition.x + (leftPad.sizeDelta.x * (leftShown ? -1 : 1)), 0);
+        leftPad.localPosition = new Vector2(leftPad.localPosition.x + (guideMoveAmount * (leftShown ? -1 : 1)), 0);
         leftShown = !leftShown;
 
         if (checkLeft) {
