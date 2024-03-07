@@ -57,6 +57,8 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
+        Debug.Log("Collision entered");
+
         if (collision.transform.CompareTag("Obstacle")) {
             /*if (view.IsMine) {
                 Debug.Log("Removed from manager");
@@ -100,7 +102,6 @@ public class BoatScript : MonoBehaviour {
             PhotonNetwork.Destroy(gameObject);
         } else {
             Debug.Log("Removed from map");
-            GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             MapBoats boatsScript = mapScript.GetComponent<MapBoats>();
 
