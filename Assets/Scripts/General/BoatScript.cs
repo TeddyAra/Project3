@@ -13,7 +13,7 @@ public class BoatScript : MonoBehaviour {
     [HideInInspector] public bool turning;
     [HideInInspector] public bool left;
     [HideInInspector] public bool paused;
-    private PhotonView view;
+    [HideInInspector] public PhotonView view;
 
     private void Start() {
         view = GetComponent<PhotonView>();

@@ -254,6 +254,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         selectedBoat = boats[num];
         icons[num].gameObject.GetComponent<UnityEngine.UI.Image>().sprite = selectionSprite;
         currentSelection = num;
+        SendEvent(GameManager.NewSelection, selectedBoat.GetComponent<BoatScript>().view.ViewID);
     }
 
     public void PopUp(string text, Color color, float time) { 
@@ -285,8 +286,8 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         }
     }
 
-    private void SendEvent(byte code, BoatScript script = null) {
+    private void SendEvent(byte code, int photonid = -1) {
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = manager.singlePlayerTest ? ReceiverGroup.All : ReceiverGroup.Others };
-        if (PhotonNetwork.RaiseEvent(code, script, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
+        if (PhotonNetwork.RaiseEvent(code, photonid, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
     }
 }

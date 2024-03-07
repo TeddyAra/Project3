@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private List<Transform> spawnPoints = new List<Transform>();
     private List<Transform> obstaclePoints = new List<Transform>();
     private Transform cam;
+    private BoatScript selectedScript;
 
     private bool twoDone;
     private BoatScript tutorialShipScript;
@@ -78,6 +79,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public const byte StartTurnLeft = 9;
     [HideInInspector] public const byte StartTurnRight = 10;
     [HideInInspector] public const byte StopTurn = 11;
+    [HideInInspector] public const byte NewSelection = 12;
 
     private void OnEnable() {
         Debug.Log("OnEvent() Enabled");
@@ -392,6 +394,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         if (photonEvent.Code > 100) return;
 
         Debug.Log($"Event received with code {photonEvent.Code}");
+
         BoatScript shipScript;
 
         // Check which event for the tutorial it is
@@ -400,21 +403,23 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                 twoDone = true;
                 break;
             case StartTurnLeft:
-                shipScript = gameStarted ? (BoatScript)photonEvent.CustomData : tutorialShipScript;
-                Debug.Log("Turning? " + shipScript.turning);
+                shipScript = gameStarted ? selectedScript : tutorialShipScript;
                 shipScript.turning = true;
                 shipScript.left = true;
                 break;
             case StartTurnRight:
-                shipScript = gameStarted ? (BoatScript)photonEvent.CustomData : tutorialShipScript;
-                Debug.Log("Turning? " + shipScript.turning);
+                shipScript = gameStarted ? selectedScript : tutorialShipScript;
                 shipScript.turning = true;
                 shipScript.left = false;
                 break;
             case StopTurn:
-                shipScript = gameStarted ? (BoatScript)photonEvent.CustomData : tutorialShipScript;
-                Debug.Log("Turning? " + shipScript.turning);
+                shipScript = gameStarted ? selectedScript : tutorialShipScript;
                 shipScript.turning = false;
+                break;
+            case NewSelection:
+                int photonid = (int)photonEvent.CustomData;
+                Debug.Log(photonid);
+                selectedScript = PhotonNetwork.GetPhotonView(photonid).gameObject.GetComponent<BoatScript>();
                 break;
         }
     }
