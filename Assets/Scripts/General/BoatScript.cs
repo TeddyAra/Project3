@@ -127,6 +127,7 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for triggers with ports
     private void OnTriggerEnter(Collider other) {
+        Debug.Log("Trigger entered");
         /*if (view.IsMine) {
             Debug.Log("Removed from manager");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
