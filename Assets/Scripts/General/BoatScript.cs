@@ -31,12 +31,33 @@ public class BoatScript : MonoBehaviour {
         }
     }
 
+    [PunRPC]
+    private void RemoveShip() { 
+        if (view.IsMine) {
+            Debug.Log("Removed from manager");
+            GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+                
+            manager.ships.Remove(gameObject);
+            manager.ShipFail();
+            PhotonNetwork.Destroy(gameObject);
+        } else {
+            Debug.Log("Removed from map");
+            MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+            GameObject icon = mapScript.boatIcons[transform].gameObject;
+
+            if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
+            mapScript.arrows.Remove(transform);
+            mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
+            mapScript.boatIcons.Remove(transform);
+            mapScript.boats.Remove(gameObject);
+            Destroy(icon);
+        }
+    }
+
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
         if (collision.transform.CompareTag("Obstacle")) {
-            gameObject.SetActive(false);
-
-            if (view.IsMine) {
+            /*if (view.IsMine) {
                 Debug.Log("Removed from manager");
                 GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
                 
@@ -54,12 +75,14 @@ public class BoatScript : MonoBehaviour {
                 mapScript.boatIcons.Remove(transform);
                 mapScript.boats.Remove(gameObject);
                 Destroy(icon);
-            }
+            }*/
+
+            view.RPC("RemoveShip", RpcTarget.All);
         }
     }
 
-    // Checks for triggers with ports
-    private void OnTriggerEnter(Collider other) {
+    [PunRPC]
+    private void CheckDock(Collider other) { 
         if (view.IsMine) {
             Debug.Log("Removed from manager");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -92,5 +115,43 @@ public class BoatScript : MonoBehaviour {
             mapScript.boats.Remove(gameObject);
             Destroy(icon);
         }
+    }
+
+    // Checks for triggers with ports
+    private void OnTriggerEnter(Collider other) {
+        /*if (view.IsMine) {
+            Debug.Log("Removed from manager");
+            GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+
+            manager.ships.Remove(gameObject);
+            PhotonNetwork.Destroy(gameObject);
+        } else {
+            Debug.Log("Removed from map");
+            GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+            MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
+            MapBoats boatsScript = mapScript.GetComponent<MapBoats>();
+
+            // Check if it's the correct port
+            if (transform.tag[transform.tag.Length - 1] == other.transform.tag[other.tag.Length - 1]) {
+                // Ship is at the right port
+                boatsScript.PopUp("Correct!", Color.green, 4);
+                manager.ShipSucceed();
+            } else {
+                // Ship isn't at right port
+                boatsScript.PopUp("Incorrect...", Color.red, 4);
+                manager.ShipFail();
+            }
+
+            GameObject icon = mapScript.boatIcons[transform].gameObject;
+
+            if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
+            mapScript.arrows.Remove(transform);
+            mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
+            mapScript.boatIcons.Remove(transform);
+            mapScript.boats.Remove(gameObject);
+            Destroy(icon);
+        }*/
+
+        view.RPC("CheckDock", RpcTarget.All, other);
     }
 }
