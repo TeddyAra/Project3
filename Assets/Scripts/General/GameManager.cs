@@ -245,7 +245,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         codeText.text = "";
 
         // Announcement telling the player to look around
-        ShowAnnouncement(gyroImage);
+        ShowAnnouncement();
+        gyroImage.SetActive(true);
         Announce("Move your phone to look around the area!");
 
         SendEvent(Announcement, new string[] {
@@ -268,7 +269,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         Pause();
 
-        HideAnnouncement(gyroImage);
+        HideAnnouncement();
+        gyroImage.SetActive(false);
         ShowAnnouncement();
 
         // Announcement telling the player there's a new ship
@@ -303,12 +305,14 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         }
 
         // Announcement telling the player to zoom in
-        ShowAnnouncement(zoomImage);
+        ShowAnnouncement();
+        zoomImage.SetActive(true);
         Announce("You young bucks have the luck of using one of them brand new touch-screen binoculars. Back in my day you had nothing but the own peepers in ye skull to scan the ocean waters!");
         while (!nextClicked) yield return null;
 
         // Wait for the player to zoom in
-        HideAnnouncement(zoomImage);
+        HideAnnouncement();
+        zoomImage.SetActive(false);
         Camera actualCam = cam.gameObject.GetComponent<Camera>();
         while (actualCam.fieldOfView > requiredZoom) yield return null;
 
