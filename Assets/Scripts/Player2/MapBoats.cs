@@ -24,6 +24,10 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     [SerializeField] private CustomButton turnLeft;
     [SerializeField] private CustomButton turnRight;
 
+    [SerializeField] private GameObject tab1; 
+    [SerializeField] private GameObject tab2; 
+    [SerializeField] private GameObject tab3; 
+
     [HideInInspector] public Dictionary<Transform, RectTransform> boatIcons = new Dictionary<Transform, RectTransform>();
     [HideInInspector] public List<GameObject> boats = new List<GameObject>();
     [HideInInspector] public List<GameObject> icons = new List<GameObject>();
@@ -289,5 +293,28 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     private void SendEvent(byte code, int photonid = -1) {
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = manager.singlePlayerTest ? ReceiverGroup.All : ReceiverGroup.Others };
         if (PhotonNetwork.RaiseEvent(code, photonid, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
+    }
+
+    public void ChangeTab(int num)
+    {
+        tab1.SetActive(false); 
+        tab2.SetActive(false);
+        tab3.SetActive(false);
+
+        Debug.Log("hello"); 
+
+        switch (num)
+        {
+            case 1: 
+                tab1.SetActive(true); 
+                break;
+
+            case 2:
+                tab2.SetActive(true);
+                break; 
+            case 3: 
+                tab3.SetActive(true);
+                break; 
+        }
     }
 }
