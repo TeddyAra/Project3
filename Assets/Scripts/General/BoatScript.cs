@@ -82,7 +82,7 @@ public class BoatScript : MonoBehaviour {
     }
 
     [PunRPC]
-    private void CheckDock(Collider other) { 
+    private void CheckDock(string tag) { 
         if (view.IsMine) {
             Debug.Log("Removed from manager");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -96,7 +96,7 @@ public class BoatScript : MonoBehaviour {
             MapBoats boatsScript = mapScript.GetComponent<MapBoats>();
 
             // Check if it's the correct port
-            if (transform.tag[transform.tag.Length - 1] == other.transform.tag[other.tag.Length - 1]) {
+            if (transform.tag[transform.tag.Length - 1] == tag[tag.Length - 1]) {
                 // Ship is at the right port
                 boatsScript.PopUp("Correct!", Color.green, 4);
                 manager.ShipSucceed();
@@ -152,6 +152,6 @@ public class BoatScript : MonoBehaviour {
             Destroy(icon);
         }*/
 
-        view.RPC("CheckDock", RpcTarget.All, other);
+        view.RPC("CheckDock", RpcTarget.All, other.tag);
     }
 }
