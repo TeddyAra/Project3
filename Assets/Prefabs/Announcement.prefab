@@ -275,11 +275,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Now, the ol\u2019 map your mate has before them is what you might call
-    a bit\u2026 behind the times, so they don\u2019t know about the many hazards
-    you can find in these waters.  \r\n\r\nYou\u2019re their only lifeline against
-    these perils. So keep a good eye on the vessels, or in a blink of the lighthouse
-    lamp they\u2019re going to be greeting Davy Jones at the bottom of the sea."
+  m_text: You young bucks have the luck of using one of them brand new touch-screen
+    binoculars. Back in my day you had nothing but the own peepers in ye skull to
+    scan the ocean waters!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e9c26c4f0d8cff49bd1785e7fe5742e, type: 2}
   m_sharedMaterial: {fileID: -3105880868645405609, guid: 5e9c26c4f0d8cff49bd1785e7fe5742e,
