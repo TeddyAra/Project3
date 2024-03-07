@@ -149,7 +149,7 @@ MonoBehaviour:
   turnSpeed: 10
   turnTime: 4
   moveSpeed: 1
-  points: 0
+  points: 2
   turning: 0
   left: 0
   paused: 0

@@ -57,6 +57,8 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
+        Debug.Log("Collision entered");
+
         if (collision.transform.CompareTag("Obstacle")) {
             /*if (view.IsMine) {
                 Debug.Log("Removed from manager");
@@ -90,17 +92,16 @@ public class BoatScript : MonoBehaviour {
 
             if (transform.tag[transform.tag.Length - 1] == tag[tag.Length - 1]) {
                 // Ship is at the right port
-                manager.ShipSucceed(points);
+                manager.ShipSucceed(true);
             } else {
                 // Ship isn't at right port
-                manager.ShipFail();
+                manager.ShipSucceed(false);
             }
 
             manager.ships.Remove(gameObject);
             PhotonNetwork.Destroy(gameObject);
         } else {
             Debug.Log("Removed from map");
-            GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             MapBoats boatsScript = mapScript.GetComponent<MapBoats>();
 
@@ -126,6 +127,7 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for triggers with ports
     private void OnTriggerEnter(Collider other) {
+        Debug.Log("Trigger entered");
         /*if (view.IsMine) {
             Debug.Log("Removed from manager");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();

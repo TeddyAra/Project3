@@ -8,6 +8,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, IOnEventCallback {
     [Serializable]
@@ -38,7 +39,9 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     public Button readyButton;
     [SerializeField] private TMP_Text announcementText;
     [SerializeField] private GameObject nextButton;
-    [SerializeField] private float findBoatRadius;
+    [SerializeField] private float searchThreshHold;
+    [SerializeField] private GameObject zoomImage;
+    [SerializeField] private GameObject gyroImage;
 
     [Header("References")]
     [SerializeField] private GameObject cameraPrefab;
@@ -58,7 +61,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private List<Transform> obstaclePoints = new List<Transform>();
     private Transform cam;
     private BoatScript selectedScript;
-    private int points;
 
     private bool twoDone;
     private BoatScript tutorialShipScript;
@@ -95,6 +97,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
     void Start() {
         view = GetComponent<PhotonView>();
+        //PhotonNetwork.AutomaticallySyncScene = true;
 
         // Update the waves list to work with new waves
         for (int i = 0; i < waves.Count; i++) {
@@ -125,6 +128,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                     playerReady.transform.SetParent(map.transform);
                     announcement.transform.SetParent(map.transform);
                     readyButton.transform.SetParent(map.transform);
+                    gyroImage.transform.SetParent(map.transform);
+                    zoomImage.transform.SetParent(map.transform);
 
                     //announcement.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
                     //announcementText = announcement.transform.GetComponentInChildren<TMP_Text>();
@@ -179,13 +184,17 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         announcementText.text = text;
     }
 
-    private void ShowAnnouncement() {
+    private void ShowAnnouncement(GameObject img = null) {
         announcement.SetActive(true);
+
+        if (img != null) img.SetActive(true);
     }
 
-    private void HideAnnouncement() {
+    private void HideAnnouncement(GameObject img = null) {
         announcement.SetActive(false);
         SendEvent(HideText);
+
+        if (img != null) img.SetActive(false);
     }
 
     private void ShowWaiting() {
@@ -200,13 +209,13 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void ShipFail() {
+        if (!tutorialDone) Points.pointAmount -= 100;
+
         tutorialFailed = true;
     }
 
-    public void ShipSucceed(int points) {
-        if (!tutorialDone) {
-            this.points += points;
-        }
+    public void ShipSucceed(bool right) {
+        if (!tutorialDone) Points.pointAmount += right ? 100 : 50;
         
         tutorialDone = true;
     }
@@ -237,6 +246,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         // Announcement telling the player to look around
         ShowAnnouncement();
+        gyroImage.SetActive(true);
         Announce("Move your phone to look around the area!");
 
         SendEvent(Announcement, new string[] {
@@ -259,6 +269,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         Pause();
 
+        HideAnnouncement();
+        gyroImage.SetActive(false);
+        ShowAnnouncement();
+
         // Announcement telling the player there's a new ship
         Announce("Me ship senses be tingling! Let’s investigate our newfound vessel!");
 
@@ -279,25 +293,26 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         // Wait for the player to look at the ship
         bool shipFound = false;
         while (!shipFound) {
-            RaycastHit hit;
-            //if (Physics.Raycast(cam.position, cam.forward, out hit)) {
-            //if (Physics.CapsuleCast(cam.position, cam.position + cam.forward * 100, findBoatRadius, cam.forward, out hit)) {
-            if (Physics.SphereCast(cam.position, findBoatRadius, cam.forward, out hit)) {
-                if (hit.transform.gameObject == ship) {
-                    shipFound = true;
-                    Debug.Log("Ship found");
-                }
+            Vector3 pos1 = ship.transform.position - cam.position;
+            Vector3 pos2 = cam.position + cam.forward * pos1.magnitude;
+            float difference = (pos2 - pos1).magnitude;
+            Debug.Log(difference);
+            if (difference < searchThreshHold) {
+                shipFound = true;
+                Debug.Log("Ship found");
             }
             yield return null;
         }
 
         // Announcement telling the player to zoom in
         ShowAnnouncement();
+        zoomImage.SetActive(true);
         Announce("You young bucks have the luck of using one of them brand new touch-screen binoculars. Back in my day you had nothing but the own peepers in ye skull to scan the ocean waters!");
         while (!nextClicked) yield return null;
 
         // Wait for the player to zoom in
         HideAnnouncement();
+        zoomImage.SetActive(false);
         Camera actualCam = cam.gameObject.GetComponent<Camera>();
         while (actualCam.fieldOfView > requiredZoom) yield return null;
 
@@ -509,12 +524,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             if (ships.Count == 0) {
                 gameStarted = false;
                 waitingForWin = false;
-                ShowAnnouncement();
-                Announce("Congratulations, you've won!");
-                SendEvent(Announcement, new string[] {
-                    "Congratulations, you've won!"
-                });
                 Debug.Log("Players have won!");
+                PhotonNetwork.LoadLevel("EndScreen");
             }
             return;
         }
