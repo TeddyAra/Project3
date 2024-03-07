@@ -281,7 +281,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         while (!shipFound) {
             RaycastHit hit;
             //if (Physics.Raycast(cam.position, cam.forward, out hit)) {
-            if (Physics.CapsuleCast(cam.position, cam.position + cam.forward * 100, findBoatRadius, cam.forward, out hit)) {
+            //if (Physics.CapsuleCast(cam.position, cam.position + cam.forward * 100, findBoatRadius, cam.forward, out hit)) {
+            if (Physics.SphereCast(cam.position, findBoatRadius, cam.forward, out hit)) {
                 if (hit.transform.gameObject == ship) {
                     shipFound = true;
                     Debug.Log("Ship found");
