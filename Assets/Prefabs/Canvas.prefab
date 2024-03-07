@@ -3276,6 +3276,7 @@ MonoBehaviour:
   selectionSprite: {fileID: 21300000, guid: 6b83b5eb752720f40a2a6e34470d02fa, type: 3}
   turnLeft: {fileID: 8829034345474413165}
   turnRight: {fileID: 7095422248705416212}
+  guideMoveAmount: 775
   tab1: {fileID: 4496905631093248942}
   tab2: {fileID: 6086287268529621934}
   tab3: {fileID: 4922355502441735385}
