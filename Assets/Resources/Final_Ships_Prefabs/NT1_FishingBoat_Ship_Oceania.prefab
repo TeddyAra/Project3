@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   water: {fileID: 0}
-  applyRipple: 0
+  applyRipple: 1
 --- !u!114 &3678470401937816010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,8 +157,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.4166842, y: 3.782292, z: 5.76485}
-  m_Center: {x: 0, y: 1.2532885, z: 0.11265206}
+  m_Size: {x: 2.1421108, y: 2.6744359, z: 5.069435}
+  m_Center: {x: 0.019479275, y: 0.9248935, z: 0.12440956}
 --- !u!114 &6654390922067080121
 MonoBehaviour:
   m_ObjectHideFlags: 0
