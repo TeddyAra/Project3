@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private BoatScript tutorialShipScript;
     private bool nextClicked;
     private bool tutorialDone;
+    private bool tutorialFailed;
     private MapBoats map;
     private bool oneReady;
     private bool twoReady;
@@ -194,8 +195,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         twoDone = false;
     }
 
-    public void ShipFail() { 
-        
+    public void ShipFail() {
     }
 
     public void ShipSucceed() { 
@@ -329,7 +329,17 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         // Wait for the ship to get to the port
         Resume();
         HideAnnouncement();
-        while (!tutorialDone) yield return null;
+        while (!tutorialDone) {
+            if (tutorialFailed) {
+                tutorialFailed = false;
+
+                ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
+                ship.GetComponent<SimpleBuoyController>().water = water;
+                tutorialShipScript = ship.GetComponent<BoatScript>();
+                SendEvent(NewShip);
+            }
+            yield return null;
+        }
 
         // Wait for both players to start the game
         Pause();
