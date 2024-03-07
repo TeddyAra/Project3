@@ -392,9 +392,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         if (photonEvent.Code > 100) return;
 
         Debug.Log($"Event received with code {photonEvent.Code}");
-
-        BoatScript shipScript = gameStarted ? (BoatScript)photonEvent.CustomData : tutorialShipScript;
-        Debug.Log("Turning? " + shipScript.turning);
+        BoatScript shipScript;
 
         // Check which event for the tutorial it is
         switch (photonEvent.Code) {
@@ -402,19 +400,23 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                 twoDone = true;
                 break;
             case StartTurnLeft:
+                shipScript = gameStarted ? (BoatScript)photonEvent.CustomData : tutorialShipScript;
+                Debug.Log("Turning? " + shipScript.turning);
                 shipScript.turning = true;
                 shipScript.left = true;
                 break;
             case StartTurnRight:
+                shipScript = gameStarted ? (BoatScript)photonEvent.CustomData : tutorialShipScript;
+                Debug.Log("Turning? " + shipScript.turning);
                 shipScript.turning = true;
                 shipScript.left = false;
                 break;
             case StopTurn:
+                shipScript = gameStarted ? (BoatScript)photonEvent.CustomData : tutorialShipScript;
+                Debug.Log("Turning? " + shipScript.turning);
                 shipScript.turning = false;
                 break;
         }
-
-        Debug.Log("Turning? " + shipScript.turning);
     }
 
     // Ensures that game logic is handled by player 1
