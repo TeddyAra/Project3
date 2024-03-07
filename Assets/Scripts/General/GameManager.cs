@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     public Button readyButton;
     [SerializeField] private TMP_Text announcementText;
     [SerializeField] private GameObject nextButton;
-    [SerializeField] private float findBoatRadius;
+    [SerializeField] private float searchThreshHold;
 
     [Header("References")]
     [SerializeField] private GameObject cameraPrefab;
@@ -279,14 +279,24 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         // Wait for the player to look at the ship
         bool shipFound = false;
         while (!shipFound) {
-            RaycastHit hit;
+            //RaycastHit hit;
             //if (Physics.Raycast(cam.position, cam.forward, out hit)) {
             //if (Physics.CapsuleCast(cam.position, cam.position + cam.forward * 100, findBoatRadius, cam.forward, out hit)) {
-            if (Physics.SphereCast(cam.position, findBoatRadius, cam.forward, out hit)) {
+            /*if (Physics.SphereCast(cam.position, findBoatRadius, cam.forward, out hit)) {
+                Debug.Log(hit.transform.name);
+                
                 if (hit.transform.gameObject == ship) {
                     shipFound = true;
                     Debug.Log("Ship found");
                 }
+            }*/
+            Vector3 pos1 = ship.transform.position - cam.position;
+            Vector3 pos2 = cam.position + cam.forward * pos1.magnitude;
+            float difference = (pos2 - pos1).magnitude;
+            Debug.Log(difference);
+            if (difference < searchThreshHold) {
+                shipFound = true;
+                Debug.Log("Ship found");
             }
             yield return null;
         }
