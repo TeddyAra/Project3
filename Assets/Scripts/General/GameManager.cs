@@ -11,6 +11,12 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, IOnEventCallback {
+
+    [SerializeField] private AudioSource shipSpawn;
+    public AudioClip shipSpawnSound; 
+    
+
+
     [Serializable]
     public struct Wave {
         public bool newWave;
@@ -541,6 +547,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             GameObject ship = PhotonNetwork.Instantiate(waves[currentIndex].shipType.name, waves[currentIndex].spawnPoint.position, waves[currentIndex].spawnPoint.rotation);
             ship.GetComponent<SimpleBuoyController>().water = water;
             ships.Add(ship);
+            shipSpawn.PlayOneShot(shipSpawnSound); 
+
             spawnTimer = 0;
 
             // Spawns the obstacle(s) if needed
