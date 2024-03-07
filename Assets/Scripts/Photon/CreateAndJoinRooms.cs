@@ -45,18 +45,11 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks {
         PhotonNetwork.LoadLevel("Game");
     }
 
-    public void OpenKeyboard() {
-        joinCode.text = "";
-        keyboard.SetActive(true);
-    }
-
-    public void CloseKeyboard() { 
-        keyboard.SetActive(false);
-    }
-
     public void Click(string num) {
-        if (num == "x" && joinCode.text != "") joinCode.text = joinCode.text.Remove(joinCode.text.Length - 1, 1);
-        else if (joinCode.text.Length == 5) return;
+        if (joinCode.text.Length > 5) joinCode.text = "";
+        if (num == "x") {
+            if (joinCode.text != "") joinCode.text = joinCode.text.Remove(joinCode.text.Length - 1, 1);
+        } else if (joinCode.text.Length == 5) return;
         else joinCode.text += num;
     }
 
