@@ -15,7 +15,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks {
         string roomName = "";
 
         for (int i = 0; i < 5; i++) {
-            roomName += Random.Range(0, 9).ToString();
+            roomName += Random.Range(1, 9).ToString();
         }
 
         PhotonNetwork.CreateRoom(roomName);
