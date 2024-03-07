@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
     void Start() {
         view = GetComponent<PhotonView>();
-        PhotonNetwork.AutomaticallySyncScene = true;
+        //PhotonNetwork.AutomaticallySyncScene = true;
 
         // Update the waves list to work with new waves
         for (int i = 0; i < waves.Count; i++) {
