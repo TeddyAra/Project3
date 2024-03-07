@@ -6,15 +6,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class EndScreen : MonoBehaviour {
-    [SerializeField] private TMP_Text text;
+    [SerializeField] private TMP_Text highscore;
+    [SerializeField] private TMP_Text score;
 
     private void Start() {
-        int highscore = PlayerPrefs.GetInt("Highscore", 0);
-        if (Points.pointAmount > highscore) {
+        int newScore = PlayerPrefs.GetInt("Highscore", 0);
+        if (Points.pointAmount > newScore) {
             PlayerPrefs.SetInt("Highscore", Points.pointAmount);
         }
 
-        text.text = $"Your score: {Points.pointAmount}\nHighscore: {highscore}";
+        highscore.text = $"Your score: {highscore}";
+        score.text = $"Highscore: {Points.pointAmount}";
     }
 
     public void Ready() {
