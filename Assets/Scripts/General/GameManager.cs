@@ -263,8 +263,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         Announce("Me ship senses be tingling! Let’s investigate our newfound vessel!");
 
         SendEvent(Announcement, new string[] {
-            "A new ship has appeared on our map! But we don’t yet know the bay port that this vessel calls home. Consult yer trusty guide as well as your ship spotter on the appearance of the ship to figure out where it’s from.",
-            "TEST HERE, TELL THE PLAYER THAT THEY CAN PRESS READY TOP RIGHT TO START THE GAME WHEN PLAYER 1 HAS SEEN THE SHIP"
+            "A new ship has appeared on our map! But we don’t yet know the bay port that this vessel calls home.", " Consult yer trusty guide as well as your ship spotter on the appearance of the ship to figure out where it’s from.",
+            "When yer sure of our vessel’s destination, continue by pressing the button in the top right corner"
         });
         SendEvent(CheckForLeft);
         while (!nextClicked) yield return null;
@@ -307,7 +307,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         while (!nextClicked) yield return null;
 
         // Wait for both players to start the game
-        Announce("TEST HERE, TELL THE PLAYER THAT THEY CAN PRESS READY TOP RIGHT TO START THE GAME");
+        Announce("When yer sure of where the ship needs to go, press the button on top right. When ye and ye pall are both sure we can tell the ship to start moving.");
+        while (!nextClicked) yield return null;
+        
+        Announce("Be warned though, others ships won’t wait for you to identify them, so keep a weather eye on the horizon!");
         while (!nextClicked) yield return null;
 
         HideAnnouncement();
@@ -325,12 +328,18 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         // Announcement telling the player to tell the other player to watch for obstacles
         Pause();
         ShowAnnouncement();
-        Announce("Now, the ol’ map your mate has before them is what you might call a bit… behind the times, so they don’t know about the many hazards you can find in these waters. You’re their only lifeline against these perils. So keep a good eye on the vessels, or in a blink of the lighthouse lamp they’re going to be greeting Davy Jones at the bottom of the sea.");
+        Announce("Now, the ol’ map your mate has before them is what you might call a bit… behind the times, so they don’t know about the many hazards you can find in these waters.");
+        while (!nextClicked) yield return null;
+        
+        Announce("You’re their only lifeline against these perils. So keep a good eye on the vessels, or in a blink of the lighthouse lamp they’re going to be greeting Davy Jones at the bottom of the sea.");
+        while (!nextClicked) yield return null; //Might not be necesary, I don't think there was a return statement here orriginally
 
         SendEvent(Announcement, new string[] {
             "We know the ship’s destination, so let’s get it there! Select a vessel and press the arrows to steer it port or starboard."
         });
         while (!nextClicked) yield return null;
+
+        
 
         // Show that player 1 is done
         ShowWaiting();
@@ -364,10 +373,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         // Wait for both players to start the game
         Pause();
         ShowAnnouncement();
-        Announce("And that’s all words can help you with, so time to get your sea legs! Keep a weather eye on the horizon and may you have fair winds and following seas, ye whippersnapper!");
+        Announce("And that’s all words can help you with, so time to get your sea legs! May you have fair winds and following seas, ye whippersnapper!");
         
         SendEvent(Announcement, new string[] {
-            "And that’s all words can help you with, so time to get your sea legs! Keep a weather eye on the horizon and may you have fair winds and following seas, ye whippersnapper!"
+            "And that’s all words can help you with, so time to get your sea legs! May you have fair winds and following seas, ye whippersnapper!"
         });
         while (!nextClicked) yield return null;
 
@@ -404,10 +413,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         // Wait for both players to start the game
         Pause();
         ShowAnnouncement();
-        Announce("And that’s all words can help you with, so time to get your sea legs! Keep a weather eye on the horizon and may you have fair winds and following seas, ye whippersnapper!");
+        Announce("And that’s all words can help you with, so time to get your sea legs! May you have fair winds and following seas, ye whippersnapper!");
 
         SendEvent(Announcement, new string[] {
-            "And that’s all words can help you with, so time to get your sea legs! Keep a weather eye on the horizon and may you have fair winds and following seas, ye whippersnapper!"
+            "And that’s all words can help you with, so time to get your sea legs! May you have fair winds and following seas, ye whippersnapper!"
         });
         while (!nextClicked) yield return null;
 
