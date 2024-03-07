@@ -227,7 +227,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         codeText.text = "";
 
         // Announcement telling the player to look around
-        /*ShowAnnouncement();
+        ShowAnnouncement();
         Announce("Move your phone to look around the area!");
 
         SendEvent(Announcement, new string[] {
@@ -240,7 +240,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             Debug.Log("Waiting");
             yield return null;
         }
-        HideWaiting();*/
+        HideWaiting();
 
         // Make tutorial ship
         GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
@@ -251,7 +251,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         Pause();
 
         // Announcement telling the player there's a new ship
-        /*Announce("Me ship senses be tingling! Let’s investigate our newfound vessel!");
+        Announce("Me ship senses be tingling! Let’s investigate our newfound vessel!");
 
         SendEvent(Announcement, new string[] {
             "A new ship has appeared on our map! But we don’t yet know the bay port that this vessel calls home. Consult yer trusty guide as well as your ship spotter on the appearance of the ship to figure out where it’s from.",
@@ -302,7 +302,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         HideAnnouncement();
         view.RPC("ShowReady", RpcTarget.All);
         while (!twoReady || !oneReady) yield return null;
-        view.RPC("HideReady", RpcTarget.All);*/
+        view.RPC("HideReady", RpcTarget.All);
 
         // Wait for the ship to get close to the obstacle
         Resume();
@@ -326,10 +326,13 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         while (!twoDone) yield return null;
         HideWaiting();
 
+        Debug.Log("Wait for ship");
+
         // Wait for the ship to get to the port
         Resume();
         HideAnnouncement();
         while (!tutorialDone) {
+            Debug.Log("Waiting");
             if (tutorialFailed) {
                 tutorialFailed = false;
 
@@ -340,6 +343,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             }
             yield return null;
         }
+
+        Debug.Log("Tutorial finished");
 
         // Wait for both players to start the game
         Pause();

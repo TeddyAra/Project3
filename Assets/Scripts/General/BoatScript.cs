@@ -87,6 +87,14 @@ public class BoatScript : MonoBehaviour {
             Debug.Log("Removed from manager");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
 
+            if (transform.tag[transform.tag.Length - 1] == tag[tag.Length - 1]) {
+                // Ship is at the right port
+                manager.ShipSucceed();
+            } else {
+                // Ship isn't at right port
+                manager.ShipFail();
+            }
+
             manager.ships.Remove(gameObject);
             PhotonNetwork.Destroy(gameObject);
         } else {
@@ -99,11 +107,9 @@ public class BoatScript : MonoBehaviour {
             if (transform.tag[transform.tag.Length - 1] == tag[tag.Length - 1]) {
                 // Ship is at the right port
                 boatsScript.PopUp("Correct!", Color.green, 4);
-                manager.ShipSucceed();
             } else {
                 // Ship isn't at right port
                 boatsScript.PopUp("Incorrect...", Color.red, 4);
-                manager.ShipFail();
             }
 
             GameObject icon = mapScript.boatIcons[transform].gameObject;
