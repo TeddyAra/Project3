@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     public Button readyButton;
     [SerializeField] private TMP_Text announcementText;
     [SerializeField] private GameObject nextButton;
+    [SerializeField] private float findBoatRadius;
 
     [Header("References")]
     [SerializeField] private GameObject cameraPrefab;
@@ -57,6 +58,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private List<Transform> obstaclePoints = new List<Transform>();
     private Transform cam;
     private BoatScript selectedScript;
+    private int points;
 
     private bool twoDone;
     private BoatScript tutorialShipScript;
@@ -201,7 +203,11 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         tutorialFailed = true;
     }
 
-    public void ShipSucceed() { 
+    public void ShipSucceed(int points) {
+        if (!tutorialDone) {
+            this.points += points;
+        }
+        
         tutorialDone = true;
     }
 
@@ -274,7 +280,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         bool shipFound = false;
         while (!shipFound) {
             RaycastHit hit;
-            if (Physics.Raycast(cam.position, cam.forward, out hit)) {
+            //if (Physics.Raycast(cam.position, cam.forward, out hit)) {
+            if (Physics.CapsuleCast(cam.position, cam.position + cam.forward * 100, findBoatRadius, cam.forward, out hit)) {
                 if (hit.transform.gameObject == ship) {
                     shipFound = true;
                     Debug.Log("Ship found");
@@ -492,6 +499,11 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             if (ships.Count == 0) {
                 gameStarted = false;
                 waitingForWin = false;
+                ShowAnnouncement();
+                Announce("Congratulations, you've won!");
+                SendEvent(Announcement, new string[] {
+                    "Congratulations, you've won!"
+                });
                 Debug.Log("Players have won!");
             }
             return;

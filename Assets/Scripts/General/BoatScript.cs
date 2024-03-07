@@ -9,6 +9,7 @@ public class BoatScript : MonoBehaviour {
     [SerializeField] private float turnSpeed;
     [SerializeField] private float turnTime;
     [SerializeField] private float moveSpeed;
+    [SerializeField] private int points;
 
     [HideInInspector] public bool turning;
     [HideInInspector] public bool left;
@@ -89,7 +90,7 @@ public class BoatScript : MonoBehaviour {
 
             if (transform.tag[transform.tag.Length - 1] == tag[tag.Length - 1]) {
                 // Ship is at the right port
-                manager.ShipSucceed();
+                manager.ShipSucceed(points);
             } else {
                 // Ship isn't at right port
                 manager.ShipFail();
