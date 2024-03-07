@@ -37,12 +37,14 @@ public class BoatScript : MonoBehaviour {
             gameObject.SetActive(false);
 
             if (view.IsMine) {
+                Debug.Log("Removed from manager");
                 GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
                 
                 manager.ships.Remove(gameObject);
                 manager.ShipFail();
                 PhotonNetwork.Destroy(gameObject);
             } else {
+                Debug.Log("Removed from map");
                 MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
                 GameObject icon = mapScript.boatIcons[transform].gameObject;
 
@@ -59,11 +61,13 @@ public class BoatScript : MonoBehaviour {
     // Checks for triggers with ports
     private void OnTriggerEnter(Collider other) {
         if (view.IsMine) {
+            Debug.Log("Removed from manager");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
 
             manager.ships.Remove(gameObject);
             PhotonNetwork.Destroy(gameObject);
         } else {
+            Debug.Log("Removed from map");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             MapBoats boatsScript = mapScript.GetComponent<MapBoats>();
