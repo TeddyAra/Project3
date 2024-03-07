@@ -219,25 +219,33 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     }
 
     public void StartTurn(bool left) {
-        //if (!manager.gameStarted) {
+        /*if (!manager.gameStarted) {
             SendEvent(left ? GameManager.StartTurnLeft : GameManager.StartTurnRight);
             return;
-        //}
+        }
 
         BoatScript script = selectedBoat.GetComponent<BoatScript>();
         script.turning = true;
         script.left = left;
-        Debug.Log("Started turning");
+        Debug.Log("Started turning");*/
+
+        Debug.Log("Start turning " + (left ? "left" : "right"));
+        SendEvent(left ? GameManager.StartTurnLeft : GameManager.StartTurnRight, selectedBoat.GetComponent<BoatScript>());
+        return;
     }
 
     public void StopTurn() {
-        //if (!manager.gameStarted) {
+        /*if (!manager.gameStarted) {
             SendEvent(GameManager.StopTurn);
             return;
-        //}
+        }
 
         selectedBoat.GetComponent<BoatScript>().turning = false;
-        Debug.Log("Stopped turning");
+        Debug.Log("Stopped turning");*/
+
+        Debug.Log("Stop turning");
+        SendEvent(GameManager.StopTurn);
+        return;
     }
 
     // Select a boat
@@ -277,8 +285,8 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         }
     }
 
-    private void SendEvent(byte code) {
+    private void SendEvent(byte code, BoatScript script = null) {
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = manager.singlePlayerTest ? ReceiverGroup.All : ReceiverGroup.Others };
-        if (PhotonNetwork.RaiseEvent(code, null, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
+        if (PhotonNetwork.RaiseEvent(code, script, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
     }
 }
