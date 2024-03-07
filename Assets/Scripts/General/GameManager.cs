@@ -8,6 +8,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, IOnEventCallback {
     [Serializable]
@@ -58,7 +59,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private List<Transform> obstaclePoints = new List<Transform>();
     private Transform cam;
     private BoatScript selectedScript;
-    private int points;
 
     private bool twoDone;
     private BoatScript tutorialShipScript;
@@ -95,6 +95,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
     void Start() {
         view = GetComponent<PhotonView>();
+        PhotonNetwork.AutomaticallySyncScene = true;
 
         // Update the waves list to work with new waves
         for (int i = 0; i < waves.Count; i++) {
@@ -205,7 +206,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
     public void ShipSucceed(int points) {
         if (!tutorialDone) {
-            this.points += points;
+            Points.pointAmount += points;
         }
         
         tutorialDone = true;
@@ -279,17 +280,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         // Wait for the player to look at the ship
         bool shipFound = false;
         while (!shipFound) {
-            //RaycastHit hit;
-            //if (Physics.Raycast(cam.position, cam.forward, out hit)) {
-            //if (Physics.CapsuleCast(cam.position, cam.position + cam.forward * 100, findBoatRadius, cam.forward, out hit)) {
-            /*if (Physics.SphereCast(cam.position, findBoatRadius, cam.forward, out hit)) {
-                Debug.Log(hit.transform.name);
-                
-                if (hit.transform.gameObject == ship) {
-                    shipFound = true;
-                    Debug.Log("Ship found");
-                }
-            }*/
             Vector3 pos1 = ship.transform.position - cam.position;
             Vector3 pos2 = cam.position + cam.forward * pos1.magnitude;
             float difference = (pos2 - pos1).magnitude;
@@ -510,12 +500,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             if (ships.Count == 0) {
                 gameStarted = false;
                 waitingForWin = false;
-                ShowAnnouncement();
-                Announce("Congratulations, you've won!");
-                SendEvent(Announcement, new string[] {
-                    "Congratulations, you've won!"
-                });
                 Debug.Log("Players have won!");
+                PhotonNetwork.LoadLevel("EndScreen");
             }
             return;
         }
