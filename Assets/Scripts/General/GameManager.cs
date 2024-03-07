@@ -97,8 +97,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
     void Start() {
         view = GetComponent<PhotonView>();
-        //PhotonNetwork.AutomaticallySyncScene = true;
-
         // Update the waves list to work with new waves
         for (int i = 0; i < waves.Count; i++) {
             if (waves[i].newWave && waves[i].spawnDelay <= 0) {
@@ -130,10 +128,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                     readyButton.transform.SetParent(map.transform);
                     gyroImage.transform.SetParent(map.transform);
                     zoomImage.transform.SetParent(map.transform);
-
-                    //announcement.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-                    //announcementText = announcement.transform.GetComponentInChildren<TMP_Text>();
-                    //readyButton = announcement.transform.GetComponentInChildren<Button>();
 
                     Destroy(parent);
 
@@ -170,11 +164,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void Next() {
-        /*if (handling) nextClicked = true;
-        else twoDone = true;
-
-        Debug.Log(handling + " " + twoDone);*/
-        //SendEvent(NextClicked);
         if (!handling) map.Next();
         else nextClicked = true;
     }
@@ -368,15 +357,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         HideAnnouncement();
         while (!tutorialDone) {
             Debug.Log("Waiting");
-            /*if (tutorialFailed) {
-                tutorialFailed = false;
-
-                ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
-                ship.GetComponent<SimpleBuoyController>().water = water;
-                tutorialShipScript = ship.GetComponent<BoatScript>();
-                SendEvent(NewShip);
-            }
-            yield return null;*/
             if (tutorialFailed) {
                 FailedTutorial();
             }
@@ -449,21 +429,11 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     private void Pause() {
         Debug.Log("Paused");
         tutorialShipScript.paused = true;
-
-        /*Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
-        foreach (Obstacle obstacle in obstacles) {
-            obstacle.paused = true;
-        }*/
     }
 
     private void Resume() {
         Debug.Log("Resumed");
         tutorialShipScript.paused = false;
-
-        /*Obstacle[] obstacles = FindObjectsOfType<Obstacle>();
-        foreach (Obstacle obstacle in obstacles) {
-            obstacle.paused = false;
-        }*/
     }
 
     public void OnEvent(EventData photonEvent) {

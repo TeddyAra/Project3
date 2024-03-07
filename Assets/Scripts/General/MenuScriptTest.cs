@@ -27,10 +27,6 @@ public class MenuScriptTest : MonoBehaviour {
 
             rectPosition = new Vector2(player2.rectTransform.position.x, player2.rectTransform.position.y);
             if ((touch.position - rectPosition).magnitude < buttonRadius) {
-                /*DontDestroyOnLoad(Instantiate(serverPrefab));
-                SceneManager.LoadScene("Player2UT");
-                changedScene = true;*/
-
                 DontDestroyOnLoad(Instantiate(serverPrefab));
                 DontDestroyOnLoad(Instantiate(clientPrefab));
 

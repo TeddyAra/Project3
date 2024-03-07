@@ -36,9 +36,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public GameObject selectedBoat;
     [HideInInspector] public int currentSelection;
     private float touchDist;
-    private PhotonView view;
     private TMP_Text codeText;
-    private int prevTouches = 0;
     private bool leftShown = false;
     private GameManager manager;
 
@@ -48,7 +46,6 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     private bool checkLeft = false;
 
     void Start() {
-        view = GetComponent<PhotonView>();
         icons = GameObject.FindGameObjectsWithTag("Icon").ToList();
         codeText = GameObject.FindGameObjectWithTag("Text").GetComponent<TMP_Text>();
         manager = FindObjectOfType<GameManager>();
@@ -116,24 +113,6 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         GameObject[] newBoats3 = GameObject.FindGameObjectsWithTag("Boat3");
         GameObject[] newBoats = newBoats1.Concat(newBoats2).ToArray().Concat(newBoats3).ToArray();
 
-        // If this is the first ship
-        /*if (boats.Count == 0) {
-            // Add the boat to the boats list
-            boats.Add(newBoats[0]);
-
-            // Make a new icon for the ship
-            GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
-            newIcon.transform.SetParent(transform);
-            newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 2);
-            icons.Add(newIcon);
-            arrows.Add(newBoats[0].transform, newIcon.transform.GetChild(0).GetComponent<RectTransform>());
-            //arrows.Add(newBoats[0].transform, newIcon.GetComponentInChildren<RectTransform>());
-            boatIcons.Add(newBoats[0].transform, newIcon.GetComponent<RectTransform>());
-
-            Select(0);
-            return;
-        }*/
-
         bool selecting = false;
         if (boats.Count == 0) selecting = true;
 
@@ -147,10 +126,9 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 // Make a new icon for the ship
                 GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
                 newIcon.transform.SetParent(transform);
-                newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 2);
+                newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 5);
                 icons.Add(newIcon);
                 arrows.Add(boat.transform, newIcon.transform.GetChild(0).GetComponent<RectTransform>());
-                //arrows.Add(boat.transform, newIcon.GetComponentInChildren<RectTransform>());
                 boatIcons.Add(boat.transform, newIcon.GetComponent<RectTransform>());
                 return;
             }
@@ -200,7 +178,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         }
 
         // If the player is touching the screen
-        if (Input.touchCount == 1 && prevTouches == Input.touchCount - 1) {
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
             touchDist = touchSize;
             int num = -1;
 
@@ -218,36 +196,15 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 Debug.Log($"Icon {num} selected");
             }
         }
-
-        // Keep track of the last frame's touches
-        prevTouches = Input.touchCount;
     }
 
     public void StartTurn(bool left) {
-        /*if (!manager.gameStarted) {
-            SendEvent(left ? GameManager.StartTurnLeft : GameManager.StartTurnRight);
-            return;
-        }
-
-        BoatScript script = selectedBoat.GetComponent<BoatScript>();
-        script.turning = true;
-        script.left = left;
-        Debug.Log("Started turning");*/
-
         Debug.Log("Start turning " + (left ? "left" : "right"));
         SendEvent(left ? GameManager.StartTurnLeft : GameManager.StartTurnRight);
         return;
     }
 
     public void StopTurn() {
-        /*if (!manager.gameStarted) {
-            SendEvent(GameManager.StopTurn);
-            return;
-        }
-
-        selectedBoat.GetComponent<BoatScript>().turning = false;
-        Debug.Log("Stopped turning");*/
-
         Debug.Log("Stop turning");
         SendEvent(GameManager.StopTurn);
         return;
@@ -296,20 +253,15 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         if (PhotonNetwork.RaiseEvent(code, photonid, raiseEventOptions, SendOptions.SendReliable)) Debug.Log($"Event sent with code {code}");
     }
 
-    public void ChangeTab(int num)
-    {
+    public void ChangeTab(int num) {
         tab1.SetActive(false); 
         tab2.SetActive(false);
         tab3.SetActive(false);
 
-        Debug.Log("hello"); 
-
-        switch (num)
-        {
+        switch (num) {
             case 1: 
                 tab1.SetActive(true); 
                 break;
-
             case 2:
                 tab2.SetActive(true);
                 break; 
