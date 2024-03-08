@@ -43,6 +43,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     private TMP_Text codeText;
     private bool leftShown = false;
     private GameManager manager;
+    [HideInInspector] public GameObject selectedIcon;
 
     [HideInInspector] public GameObject announcement;
     [HideInInspector] public TMP_Text announcementText;
@@ -131,6 +132,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
                 newIcon.transform.SetParent(transform);
                 newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 5);
+                newIcon.GetComponent<Button>().onClick.AddListener(() => { NewSelect(newIcon); });
                 icons.Add(newIcon);
                 arrows.Add(boat.transform, newIcon.transform.GetChild(0).GetComponent<RectTransform>());
                 boatIcons.Add(boat.transform, newIcon.GetComponent<RectTransform>());
@@ -182,7 +184,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         }
 
         // If the player is touching the screen
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
+        /*if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
             touchDist = touchSize;
             int num = -1;
 
@@ -199,7 +201,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 Select(num);
                 Debug.Log($"Icon {num} selected");
             }
-        }
+        }*/
     }
 
     public void StartTurn(bool left) {
@@ -220,6 +222,15 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         selectedBoat = boats[num];
         icons[num].gameObject.GetComponent<UnityEngine.UI.Image>().sprite = selectionSprite;
         currentSelection = num;
+        SendEvent(GameManager.NewSelection, selectedBoat.GetComponent<BoatScript>().view.ViewID);
+    }
+
+    public void NewSelect(GameObject icon) {
+        if (selectedIcon != null) selectedIcon.GetComponent<UnityEngine.UI.Image>().sprite = normalSprite;
+        selectedBoat = boatIcons.FirstOrDefault(x => x.Value == icon.GetComponent<RectTransform>()).Key.gameObject;
+        icon.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = selectionSprite;
+        //currentSelection = num;
+        selectedIcon = icon;
         SendEvent(GameManager.NewSelection, selectedBoat.GetComponent<BoatScript>().view.ViewID);
     }
 

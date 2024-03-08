@@ -53,8 +53,9 @@ public class BoatScript : MonoBehaviour {
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             GameObject icon = mapScript.boatIcons[transform].gameObject;
 
-            shipDestroy.PlayOneShot(shipDestroySound); 
+            //shipDestroy.PlayOneShot(shipDestroySound); 
             if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
+            if (mapScript.selectedBoat = gameObject) mapScript.selectedIcon = null;
             mapScript.arrows.Remove(transform);
             mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
             mapScript.boatIcons.Remove(transform);
