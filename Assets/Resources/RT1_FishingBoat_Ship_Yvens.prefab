@@ -134,6 +134,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbfb69db597a1a24aad6066d2d1db48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipDestroy: {fileID: 0}
+  shipDestroySound: {fileID: 8300000, guid: 912e01a8dbf3abd44876ef6eb594a399, type: 3}
+  shipReachDock: {fileID: 0}
+  shipReachDockSound: {fileID: 8300000, guid: fb396e533e3ce15439b30010d09229aa, type: 3}
   turnSpeed: 10
   turnTime: 4
   moveSpeed: 1

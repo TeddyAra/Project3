@@ -13,6 +13,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour, IOnEventCallback {
 
     [SerializeField] private AudioSource shipSpawn;
+    [SerializeField] private AudioSource shipDestroy;
+    [SerializeField] private AudioSource shipReachDock; 
+
     public AudioClip shipSpawnSound; 
     
 
@@ -260,6 +263,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
         ship.GetComponent<SimpleBuoyController>().water = water;
         tutorialShipScript = ship.GetComponent<BoatScript>();
+        
+        tutorialShipScript.shipDestroy = shipDestroy; 
+        tutorialShipScript.shipReachDock = shipReachDock;
+
         SendEvent(NewShip);
 
         Pause();
@@ -402,6 +409,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
         ship.GetComponent<SimpleBuoyController>().water = water;
         tutorialShipScript = ship.GetComponent<BoatScript>();
+
+        tutorialShipScript.shipDestroy = shipDestroy; 
+        tutorialShipScript.shipReachDock = shipReachDock;
+
         SendEvent(NewShip);
 
         while (!tutorialDone) { 
@@ -518,6 +529,9 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             ship.GetComponent<SimpleBuoyController>().water = water;
             ships.Add(ship);
             shipSpawn.PlayOneShot(shipSpawnSound); 
+
+            ship.GetComponent<BoatScript>().shipDestroy = shipDestroy;
+            ship.GetComponent<BoatScript>().shipReachDock = shipReachDock;
 
             spawnTimer = 0;
 

@@ -6,6 +6,12 @@ using TMPro;
 using UnityEngine;
 
 public class BoatScript : MonoBehaviour {
+
+    public AudioSource shipDestroy;
+    [SerializeField] private AudioClip shipDestroySound;
+    public AudioSource shipReachDock;
+    [SerializeField] private AudioClip shipReachDockSound; 
+
     [SerializeField] private float turnSpeed;
     [SerializeField] private float turnTime;
     [SerializeField] private float moveSpeed;
@@ -37,7 +43,8 @@ public class BoatScript : MonoBehaviour {
         if (view.IsMine) {
             Debug.Log("Removed from manager");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-                
+            
+            shipDestroy.PlayOneShot(shipDestroySound); 
             manager.ships.Remove(gameObject);
             manager.ShipFail();
             PhotonNetwork.Destroy(gameObject);
@@ -46,6 +53,7 @@ public class BoatScript : MonoBehaviour {
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             GameObject icon = mapScript.boatIcons[transform].gameObject;
 
+            shipDestroy.PlayOneShot(shipDestroySound); 
             if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
             mapScript.arrows.Remove(transform);
             mapScript.icons.Remove(mapScript.boatIcons[transform].gameObject);
@@ -73,9 +81,11 @@ public class BoatScript : MonoBehaviour {
             if (transform.tag[transform.tag.Length - 1] == tag[tag.Length - 1]) {
                 // Ship is at the right port
                 manager.ShipSucceed(true);
+                shipReachDock.PlayOneShot(shipReachDockSound); 
             } else {
                 // Ship isn't at right port
                 manager.ShipSucceed(false);
+                shipReachDock.PlayOneShot(shipReachDockSound); 
             }
 
             manager.ships.Remove(gameObject);
