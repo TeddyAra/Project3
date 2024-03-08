@@ -13,13 +13,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour, IOnEventCallback {
 
     [SerializeField] private AudioSource shipSpawn;
-    [SerializeField] private AudioSource shipDestroy;
-    [SerializeField] private AudioSource shipReachDock; 
-
     public AudioClip shipSpawnSound; 
-    
-
-
+   
     [Serializable]
     public struct Wave {
         public bool newWave;
@@ -207,14 +202,27 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void ShipFail() {
-        if (!tutorialDone) Points.pointAmount -= 100;
+        view.RPC("ShipFail", RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void ShipFailRPC() {
+        if (!tutorialDone) {
+            Points.pointAmount -= 100;
+            if (Points.pointAmount < 0) Points.pointAmount = 0;
+        }
 
         tutorialFailed = true;
     }
 
     public void ShipSucceed(bool right) {
+        view.RPC("ShipSucceedRPC", RpcTarget.All, right);
+    }
+
+    [PunRPC]
+    private void ShipSucceedRPC(bool right) {
         if (!tutorialDone) Points.pointAmount += right ? 100 : 50;
-        
+
         tutorialDone = true;
     }
 
@@ -263,10 +271,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
         ship.GetComponent<SimpleBuoyController>().water = water;
         tutorialShipScript = ship.GetComponent<BoatScript>();
-        
-        tutorialShipScript.shipDestroy = shipDestroy; 
-        tutorialShipScript.shipReachDock = shipReachDock;
-
         SendEvent(NewShip);
 
         Pause();
@@ -409,10 +413,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
         ship.GetComponent<SimpleBuoyController>().water = water;
         tutorialShipScript = ship.GetComponent<BoatScript>();
-
-        tutorialShipScript.shipDestroy = shipDestroy; 
-        tutorialShipScript.shipReachDock = shipReachDock;
-
         SendEvent(NewShip);
 
         while (!tutorialDone) { 
@@ -502,6 +502,11 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         Debug.Log("Game started");
     }
 
+    [PunRPC]
+    private void FinishGame() {
+        SceneManager.LoadScene("EndScreen");
+    }
+
     void Update() {
         // Don't do anything if there's no game to play or if not managing the game
         if (!gameStarted) return;
@@ -512,7 +517,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
                 gameStarted = false;
                 waitingForWin = false;
                 Debug.Log("Players have won!");
-                PhotonNetwork.LoadLevel("EndScreen");
+                view.RPC("FinishGame", RpcTarget.All);
             }
             return;
         }
@@ -529,9 +534,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             ship.GetComponent<SimpleBuoyController>().water = water;
             ships.Add(ship);
             shipSpawn.PlayOneShot(shipSpawnSound); 
-
-            ship.GetComponent<BoatScript>().shipDestroy = shipDestroy;
-            ship.GetComponent<BoatScript>().shipReachDock = shipReachDock;
 
             spawnTimer = 0;
 

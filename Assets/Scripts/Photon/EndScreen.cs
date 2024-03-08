@@ -15,8 +15,8 @@ public class EndScreen : MonoBehaviour {
             PlayerPrefs.SetInt("Highscore", Points.pointAmount);
         }
 
-        highscore.text = $"Your score: {highscore}";
-        score.text = $"Highscore: {Points.pointAmount}";
+        highscore.text = highscore.ToString();
+        score.text = Points.pointAmount.ToString();
     }
 
     public void Ready() {
