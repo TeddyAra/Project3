@@ -54,6 +54,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     [SerializeField] private GameObject normalCameraPrefab;
     [SerializeField] private Transform cameraPos;
     [SerializeField] private Pinwheel.Poseidon.PWater water;
+    [SerializeField] private AudioSource shipDestroy;
+    [SerializeField] private AudioSource dockReach;
 
     private PhotonView view;
     [HideInInspector] public bool gameStarted = false;
@@ -202,7 +204,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void ShipFail() {
-        view.RPC("ShipFail", RpcTarget.All);
+        view.RPC("ShipFailRPC", RpcTarget.All);
     }
 
     [PunRPC]
@@ -232,7 +234,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         else view.RPC("ReadyRPC", RpcTarget.Others);
     }
 
-    [PunRPC] private void ReadyRPC() {
+    [PunRPC] 
+    private void ReadyRPC() {
         twoReady = true;
     }
 
@@ -271,6 +274,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
         ship.GetComponent<SimpleBuoyController>().water = water;
         tutorialShipScript = ship.GetComponent<BoatScript>();
+        tutorialShipScript.shipDestroy = shipDestroy;
+        tutorialShipScript.shipReachDock = dockReach;
         SendEvent(NewShip);
 
         Pause();
@@ -413,6 +418,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         GameObject ship = PhotonNetwork.Instantiate(tutorialShip.name, tutorialSpawn.position, tutorialSpawn.rotation);
         ship.GetComponent<SimpleBuoyController>().water = water;
         tutorialShipScript = ship.GetComponent<BoatScript>();
+        tutorialShipScript.shipDestroy = shipDestroy;
+        tutorialShipScript.shipReachDock = dockReach;
         SendEvent(NewShip);
 
         while (!tutorialDone) { 
@@ -532,6 +539,9 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             // Spawn the ship and reset the spawn timer
             GameObject ship = PhotonNetwork.Instantiate(waves[currentIndex].shipType.name, waves[currentIndex].spawnPoint.position, waves[currentIndex].spawnPoint.rotation);
             ship.GetComponent<SimpleBuoyController>().water = water;
+            BoatScript shipScript = ship.GetComponent<BoatScript>();
+            shipScript.shipDestroy = shipDestroy;
+            shipScript.shipReachDock = dockReach;
             ships.Add(ship);
             shipSpawn.PlayOneShot(shipSpawnSound); 
 
