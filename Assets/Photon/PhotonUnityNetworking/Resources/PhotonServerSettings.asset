@@ -50,6 +50,9 @@ MonoBehaviour:
   - CheckDock
   - RemoveShip
   - NewSelection
+  - FinishGame
+  - ShipFailRPC
+  - ShipSucceedRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
