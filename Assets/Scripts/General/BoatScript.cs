@@ -41,7 +41,6 @@ public class BoatScript : MonoBehaviour {
     [PunRPC]
     private void RemoveShip() { 
         if (view.IsMine) {
-            Debug.Log("Removed from manager");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
             
             shipDestroy.PlayOneShot(shipDestroySound); 
@@ -49,11 +48,9 @@ public class BoatScript : MonoBehaviour {
             manager.ShipFail();
             PhotonNetwork.Destroy(gameObject);
         } else {
-            Debug.Log("Removed from map");
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             GameObject icon = mapScript.boatIcons[transform].gameObject;
 
-            //shipDestroy.PlayOneShot(shipDestroySound); 
             if (mapScript.selectedBoat == gameObject) mapScript.currentSelection = -1;
             if (mapScript.selectedBoat = gameObject) mapScript.selectedIcon = null;
             mapScript.arrows.Remove(transform);
@@ -66,8 +63,6 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for collisions with obstacles
     private void OnCollisionEnter(Collision collision) {
-        Debug.Log("Collision entered");
-
         if (collision.transform.CompareTag("Obstacle")) {
             view.RPC("RemoveShip", RpcTarget.All);
         }
@@ -76,7 +71,6 @@ public class BoatScript : MonoBehaviour {
     [PunRPC]
     private void CheckDock(string tag) { 
         if (view.IsMine) {
-            Debug.Log("Removed from manager");
             GameManager manager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
 
             if (transform.tag[transform.tag.Length - 1] == tag[tag.Length - 1]) {
@@ -92,7 +86,6 @@ public class BoatScript : MonoBehaviour {
             manager.ships.Remove(gameObject);
             PhotonNetwork.Destroy(gameObject);
         } else {
-            Debug.Log("Removed from map");
             MapBoats mapScript = GameObject.FindGameObjectWithTag("Map").GetComponent<MapBoats>();
             MapBoats boatsScript = mapScript.GetComponent<MapBoats>();
 
@@ -118,7 +111,6 @@ public class BoatScript : MonoBehaviour {
 
     // Checks for triggers with ports
     private void OnTriggerEnter(Collider other) {
-        Debug.Log("Trigger entered");
         view.RPC("CheckDock", RpcTarget.All, other.tag);
     }
 }

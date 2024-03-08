@@ -229,7 +229,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     public void Ready() {
-        Debug.Log("Ready clicked");
         if (handling) oneReady = true;
         else view.RPC("ReadyRPC", RpcTarget.Others);
     }
@@ -250,7 +249,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     IEnumerator Tutorial() {
-        Debug.Log("Tutorial started");
         codeText.text = "";
 
         // Announcement telling the player to look around
@@ -265,7 +263,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         ShowWaiting();
         while (!twoDone) {
-            Debug.Log("Waiting");
             yield return null;
         }
         HideWaiting();
@@ -310,7 +307,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             Debug.Log(difference);
             if (difference < searchThreshHold) {
                 shipFound = true;
-                Debug.Log("Ship found");
             }
             yield return null;
         }
@@ -372,20 +368,15 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
         while (!twoDone) yield return null;
         HideWaiting();
 
-        Debug.Log("Wait for ship");
-
         // Wait for the ship to get to the port
         Resume();
         HideAnnouncement();
         while (!tutorialDone) {
-            Debug.Log("Waiting");
             if (tutorialFailed) {
                 FailedTutorial();
             }
             yield return null;
         }
-
-        Debug.Log("Tutorial finished");
 
         // Wait for both players to start the game
         Pause();
@@ -451,20 +442,16 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     }
 
     private void Pause() {
-        Debug.Log("Paused");
         tutorialShipScript.paused = true;
     }
 
     private void Resume() {
-        Debug.Log("Resumed");
         tutorialShipScript.paused = false;
     }
 
     public void OnEvent(EventData photonEvent) {
         // Ignore some events
         if (photonEvent.Code > 100) return;
-
-        Debug.Log($"Event received with code {photonEvent.Code}");
 
         BoatScript shipScript;
 
@@ -506,7 +493,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
     void StartGame() {
         gameStarted = true;
         codeText.text = "";
-        Debug.Log("Game started");
     }
 
     [PunRPC]
@@ -523,7 +509,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             if (ships.Count == 0) {
                 gameStarted = false;
                 waitingForWin = false;
-                Debug.Log("Players have won!");
                 view.RPC("FinishGame", RpcTarget.All);
             }
             return;
@@ -535,7 +520,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
 
         // If a new ship should be spawned
         if (spawnTimer > waves[currentIndex].spawnDelay) {
-            Debug.Log("Ship made");
             // Spawn the ship and reset the spawn timer
             GameObject ship = PhotonNetwork.Instantiate(waves[currentIndex].shipType.name, waves[currentIndex].spawnPoint.position, waves[currentIndex].spawnPoint.rotation);
             ship.GetComponent<SimpleBuoyController>().water = water;
@@ -562,44 +546,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback {
             } else {
                 waitingForWin = true;
             }
-        }
-    }
-
-    // Draw the spawn points and obstacles
-    [ExecuteInEditMode]
-    private void OnDrawGizmos() {
-        // Set the colour
-        Gizmos.color = Color.red;
-
-        // Check if the list has been updated
-        GameObject[] pointsList = GameObject.FindGameObjectsWithTag("SpawnPoint");
-        if (spawnPoints.Count != pointsList.Length) {
-            spawnPoints.Clear();
-            foreach (var point in pointsList) {
-                spawnPoints.Add(point.transform);
-            }
-        }
-
-        // Draw the arrows
-        foreach (Transform spawnPoint in spawnPoints) {
-            Gizmos.DrawSphere(spawnPoint.position, 0.1f);
-            Gizmos.DrawRay(spawnPoint.position, spawnPoint.forward * 4);
-            Gizmos.DrawRay(spawnPoint.position + spawnPoint.forward * 4, -spawnPoint.forward + spawnPoint.right);
-            Gizmos.DrawRay(spawnPoint.position + spawnPoint.forward * 4, -spawnPoint.forward - spawnPoint.right);
-        }
-
-        // Check if the list has been updated
-        GameObject[] obstaclesList = GameObject.FindGameObjectsWithTag("Obstacle");
-        if (obstaclePoints.Count != obstaclesList.Length) {
-            obstaclePoints.Clear();
-            foreach (var obstacle in obstaclesList) {
-                obstaclePoints.Add(obstacle.transform);
-            }
-        }
-
-        // Draw the obstacles
-        foreach (Transform obstacle in obstaclePoints) {
-            Gizmos.DrawSphere(obstacle.position, 1);
         }
     }
 }

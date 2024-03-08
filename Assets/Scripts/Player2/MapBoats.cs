@@ -39,7 +39,6 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
     [HideInInspector] public Dictionary<Transform, RectTransform> arrows = new Dictionary<Transform, RectTransform>();
     [HideInInspector] public GameObject selectedBoat;
     [HideInInspector] public int currentSelection;
-    private float touchDist;
     private TMP_Text codeText;
     private bool leftShown = false;
     private GameManager manager;
@@ -122,6 +121,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         if (boats.Count == 0) selecting = true;
 
         // If this isn't the first ship
+        GameObject newIcon = null;
         foreach (GameObject boat in newBoats) {
             // If boat isn't already being tracked
             if (!boats.Contains(boat)) {
@@ -129,7 +129,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
                 boats.Add(boat);
 
                 // Make a new icon for the ship
-                GameObject newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
+                newIcon = Instantiate(iconPrefab, Vector3.zero, Quaternion.identity);
                 newIcon.transform.SetParent(transform);
                 newIcon.transform.SetSiblingIndex(newIcon.transform.GetSiblingIndex() - 5);
                 newIcon.GetComponent<Button>().onClick.AddListener(() => { NewSelect(newIcon); });
@@ -141,7 +141,7 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         }
 
         if (selecting) {
-            Select(0);
+            NewSelect(newIcon);
         }
     }
 
@@ -182,26 +182,6 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         foreach (GameObject boat in boats) {
             arrows[boat.transform].rotation = Quaternion.Euler(0, 0, -boat.transform.eulerAngles.y);
         }
-
-        // If the player is touching the screen
-        /*if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
-            touchDist = touchSize;
-            int num = -1;
-
-            for (int i = 0; i < boatIcons.Count; i++) {
-                // Check if boat icon has been touched
-                Vector2 iconPos = new Vector2(boatIcons.ElementAt(i).Value.position.x, boatIcons.ElementAt(i).Value.position.y);
-                if ((Input.GetTouch(0).position - iconPos).magnitude < touchDist) {
-                    touchDist = (Input.GetTouch(0).position - iconPos).magnitude;
-                    num = i;
-                }
-            }
-
-            if (num != -1) {
-                Select(num);
-                Debug.Log($"Icon {num} selected");
-            }
-        }*/
     }
 
     public void StartTurn(bool left) {
@@ -216,20 +196,10 @@ public class MapBoats : MonoBehaviour, IOnEventCallback {
         return;
     }
 
-    // Select a boat
-    public void Select(int num) {
-        if (currentSelection != -1) icons[currentSelection].gameObject.GetComponent<UnityEngine.UI.Image>().sprite = normalSprite;
-        selectedBoat = boats[num];
-        icons[num].gameObject.GetComponent<UnityEngine.UI.Image>().sprite = selectionSprite;
-        currentSelection = num;
-        SendEvent(GameManager.NewSelection, selectedBoat.GetComponent<BoatScript>().view.ViewID);
-    }
-
     public void NewSelect(GameObject icon) {
         if (selectedIcon != null) selectedIcon.GetComponent<UnityEngine.UI.Image>().sprite = normalSprite;
         selectedBoat = boatIcons.FirstOrDefault(x => x.Value == icon.GetComponent<RectTransform>()).Key.gameObject;
         icon.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = selectionSprite;
-        //currentSelection = num;
         selectedIcon = icon;
         SendEvent(GameManager.NewSelection, selectedBoat.GetComponent<BoatScript>().view.ViewID);
     }
